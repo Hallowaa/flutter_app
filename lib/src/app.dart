@@ -13,6 +13,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        primaryColorDark: Colors.black54,
+        textTheme: const TextTheme(
+          titleLarge: TextStyle(color: Colors.white, fontSize: 34),
+        ),
       ),
       localizationsDelegates: const [
         AppLocalizations.delegate,
