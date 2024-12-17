@@ -14,16 +14,18 @@ class Loginview extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                decoration: const InputDecoration(
                   hintText: 'Username',
                 ),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 20),
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                decoration: const InputDecoration(
                   hintText: 'Password',
                 ),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 20),
               Align(
@@ -31,10 +33,11 @@ class Loginview extends StatelessWidget {
                 child:  ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColorLight,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 50, vertical: 20),
                   ),
-                  child: const Text('Login'),
+                  child: Text('Login', style: Theme.of(context).textTheme.bodyMedium),
                 ),
               )
             ],

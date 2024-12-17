@@ -14,8 +14,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         primaryColorDark: Colors.black54,
+        primaryColorLight: const Color.fromARGB(255, 34, 34, 34),
         textTheme: const TextTheme(
           titleLarge: TextStyle(color: Colors.white, fontSize: 34),
+          bodyMedium: TextStyle(color: Colors.white, fontSize: 18),
+
         ),
       ),
       localizationsDelegates: const [
