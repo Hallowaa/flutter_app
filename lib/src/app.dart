@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const Loginview(),
+      home: const LoginView(),
     );
   }
 }

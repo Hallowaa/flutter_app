@@ -1,14 +1,40 @@
 import 'package:flutter/material.dart';
 
-class Loginview extends StatelessWidget {
-  const Loginview({super.key});
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
+
+  @override
+  State<LoginView> createState() => _Loginview();
+}
+
+class _Loginview extends State<LoginView> {
+  String _username = '';
+  String _password = '';
+
+  void _login() {
+    // temporary login for admin
+    if (_username == 'admin' && _password == 'admin') {
+      
+    }
+  }
+
+  void _handleUsernameChange(String value) {
+    setState(() {
+      _username = value;
+    });
+  }
+
+  void _handlePasswordChange(String value) {
+    setState(() {
+      _password = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColorDark,
-      body: Expanded(child:
-      Container(
+      body: Container(
         padding: const EdgeInsets.all(24),
         child:
           Column(
@@ -19,6 +45,7 @@ class Loginview extends StatelessWidget {
                   hintText: 'Username',
                 ),
                 style: Theme.of(context).textTheme.bodyMedium,
+                onChanged: (value) => _handleUsernameChange(value),
               ),
               const SizedBox(height: 20),
               TextField(
@@ -26,12 +53,13 @@ class Loginview extends StatelessWidget {
                   hintText: 'Password',
                 ),
                 style: Theme.of(context).textTheme.bodyMedium,
+                onChanged: (value) => _handlePasswordChange(value),
               ),
               const SizedBox(height: 20),
               Align(
                 alignment: Alignment.centerRight,
                 child:  ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => _login(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColorLight,
                     padding: const EdgeInsets.symmetric(
@@ -43,7 +71,6 @@ class Loginview extends StatelessWidget {
             ],
           ),
         ),
-      ),
     );
   }
 }
