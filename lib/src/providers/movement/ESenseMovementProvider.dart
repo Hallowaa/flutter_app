@@ -1,12 +1,10 @@
 import 'package:flutter_project/src/providers/movement/MovementProvider.dart';
 import 'dart:io';
 import 'dart:async';
-import 'dart:math';
 
 import 'package:esense_flutter/esense.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sensors_plus/sensors_plus.dart';
-import 'package:flutter_reactive_value/flutter_reactive_value.dart';
 
 class ESenseMovementProvider extends MovementProvider {
   static const int fractionalDigits = 2;
