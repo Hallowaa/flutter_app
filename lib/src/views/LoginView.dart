@@ -14,6 +14,7 @@ class _Loginview extends State<LoginView> {
   void _login() {
     // temporary login for admin
     if (_username == 'admin' && _password == 'admin') {
+      // go to homeview
       
     }
   }

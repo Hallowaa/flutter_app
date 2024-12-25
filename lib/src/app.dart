@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_project/src/providers/movement/ESenseMovementProvider.dart';
+import 'package:flutter_project/src/views/HomeView.dart';
 import 'package:flutter_project/src/views/LoginView.dart';
+import 'package:provider/provider.dart';
 
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
@@ -9,7 +12,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(providers: [
+      ChangeNotifierProvider(create: (context) => ESenseMovementProvider()),
+    ],
+    child: MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -18,7 +24,6 @@ class MyApp extends StatelessWidget {
         textTheme: const TextTheme(
           titleLarge: TextStyle(color: Colors.white, fontSize: 34),
           bodyMedium: TextStyle(color: Colors.white, fontSize: 18),
-
         ),
       ),
       localizationsDelegates: const [
@@ -28,7 +33,8 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const LoginView(),
+      home: const HomeView(),
+      )
     );
   }
 }
