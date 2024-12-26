@@ -29,6 +29,21 @@ class ESenseMovementProvider extends MovementProvider {
   List<double> get speed => _deviceSpeed;
   double get deviceSpeedMagnitude => _deviceSpeedMagnitude;
 
+  bool _useDeviceSensors = false;
+
+  bool get useDeviceSensors => _useDeviceSensors;
+  StreamSubscription? _deviceSubscription;
+
+  set useDeviceSensors(bool value) {
+    _useDeviceSensors = value;
+    
+    if (value) {
+      alternativeConnect();
+    } else {
+      _deviceSubscription?.cancel();
+    }
+  }
+
   ESenseMovementProvider();
 
   @override
@@ -46,7 +61,8 @@ class ESenseMovementProvider extends MovementProvider {
 
   @override
   void alternativeConnect() async {
-    userAccelerometerEventStream(samplingPeriod: sensorInterval)
+    _deviceSubscription?.cancel();
+    _deviceSubscription = userAccelerometerEventStream(samplingPeriod: sensorInterval)
         .listen((UserAccelerometerEvent event) {
       _deviceAcc = [event.x, event.y, event.z];
       _deviceSpeed = [

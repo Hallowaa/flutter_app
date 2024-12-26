@@ -8,14 +8,21 @@ import 'package:flutter_project/src/views/LoginView.dart';
 import 'package:provider/provider.dart';
 
 /// The Widget that configures your application.
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final ESenseMovementProvider eSenseMovementProvider = ESenseMovementProvider();
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => ESenseMovementProvider()),
-      ChangeNotifierProvider(create: (context) => GameDataProvider()),
+      ChangeNotifierProvider(create: (context) => eSenseMovementProvider),
+      ChangeNotifierProvider(create: (context) => GameDataProvider(eSenseMovementProvider)),
     ],
     child: MaterialApp(
       title: 'Flutter Demo',

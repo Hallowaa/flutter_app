@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_project/src/model/entity/player.dart';
+import 'package:flutter_project/src/providers/movement/ESenseMovementProvider.dart';
 import 'package:flutter_project/src/util/StorageManager.dart';
 
 class GameDataProvider extends ChangeNotifier {
@@ -42,6 +43,18 @@ class GameDataProvider extends ChangeNotifier {
   };
 
   Player get player => _player;
+
+  GameDataProvider(ESenseMovementProvider eSenseMovementProvider) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      int levelBefore = getLevel(_player.experience);
+      addExperience(eSenseMovementProvider.deviceSpeedMagnitude.floor());
+      int levelAfter = getLevel(_player.experience);
+
+      if (levelAfter > levelBefore) {
+        // show level up dialog
+      }
+    });
+  }
 
   set player(Player player) {
     _player = player;

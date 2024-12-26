@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/src/providers/game/GameDataProvider.dart';
 import 'package:flutter_project/src/providers/movement/ESenseMovementProvider.dart';
+import 'package:flutter_project/src/views/PassivesView.dart';
 import 'package:flutter_project/src/views/SettingsView.dart';
 import 'package:provider/provider.dart';
 
@@ -15,17 +15,6 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-
-  @override
-  void initState() {
-    super.initState();
-    
-    // add speed to experience
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      Provider.of<GameDataProvider>(context, listen: false).addExperience(Provider.of<ESenseMovementProvider>(context, listen: false).deviceSpeedMagnitude.floor());
-    });
-  }
-
   Future<void> _loadPlayer() async {
     Provider.of<GameDataProvider>(context, listen: false).loadPlayer('default');
   }
@@ -49,7 +38,7 @@ class _HomeViewState extends State<HomeView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Level ${provider.getLevel(provider.player.experience)}', style: Theme.of(context).textTheme.bodySmall),
-                      Text(provider.player.experience.toString(), style: Theme.of(context).textTheme.bodySmall),
+                      Text('${provider.player.experience} EXP', style: Theme.of(context).textTheme.bodySmall),
                     ],
                   ),
                 )
@@ -91,24 +80,33 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       ),
-      bottomNavigationBar: NavigationBar(destinations: const [
-          NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
-          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-        ],
-        backgroundColor: Theme.of(context).primaryColorLight,
-        selectedIndex: 1,
-        onDestinationSelected: (index) {
-          switch (index) {
-            case 0:
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsView()));
-              break;
-            case 1:
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeView()));
-              break;
-            }
-        },
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          labelTextStyle: WidgetStateProperty.all(Theme.of(context).textTheme.bodySmall),
+        ),
+        child: NavigationBar(destinations: const [
+            NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
+            NavigationDestination(icon: Icon(Icons.arrow_upward), label: 'Passives'),
+            NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+          ],
+          backgroundColor: Theme.of(context).primaryColorLight,
+          selectedIndex: 2,
+          onDestinationSelected: (index) {
+            switch (index) {
+              case 0:
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsView()));
+                break;
+              case 1:
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const PassivesView()));
+                break;
+              case 2:
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeView()));
+                break;
+              }
+          },
+        ),
       ),
-      backgroundColor: Theme.of(context).primaryColorLight,
+      backgroundColor: Theme.of(context).primaryColorDark,
     );
   }
 }
