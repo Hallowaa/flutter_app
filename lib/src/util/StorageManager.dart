@@ -20,13 +20,13 @@ class StorageManager {
   Future<String> readFileAsString(String name) async {
     final file = await loadFile(name);
 
-    return await file.readAsString();
+    return file.readAsStringSync();
   }
 
   Future<dynamic> readFileAsJson(String name) async {
     final file = await loadFile(name);
-    
-    final data = await file.readAsString();
+
+    final data = file.readAsStringSync();
 
     return json.decode(data);
   }
@@ -35,7 +35,12 @@ class StorageManager {
   Future<File> saveFile(String name, String data) async {
     final file = await loadFile(name);
 
-    return await file.writeAsString(data);
+    // if file does not exist, create it
+    if (!file.existsSync()) {
+      file.createSync();
+    }
+
+    return file.writeAsString(data);
   }
 
 }

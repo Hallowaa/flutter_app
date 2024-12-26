@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_project/src/providers/movement/MovementProvider.dart';
 import 'dart:io';
 import 'dart:async';
@@ -16,7 +18,8 @@ class ESenseMovementProvider extends MovementProvider {
   List<double> _deviceAcc = [0, 0, 0];
 
   List<double> _deviceSpeed = [0, 0, 0];
-  final double _damping = 0.7;
+  double _deviceSpeedMagnitude = 0;
+  final double _damping = 0.85;
 
   ESenseManager eSenseManager = ESenseManager(_eSenseDeviceName);
   Duration sensorInterval = SensorInterval.normalInterval;
@@ -24,6 +27,7 @@ class ESenseMovementProvider extends MovementProvider {
   bool _connected = false;
 
   List<double> get speed => _deviceSpeed;
+  double get deviceSpeedMagnitude => _deviceSpeedMagnitude;
 
   ESenseMovementProvider();
 
@@ -50,6 +54,7 @@ class ESenseMovementProvider extends MovementProvider {
         (_deviceSpeed[1] + _deviceAcc[1]) * _damping,
         (_deviceSpeed[2] + _deviceAcc[2]) * _damping
       ];
+      _deviceSpeedMagnitude = sqrt(pow(_deviceSpeed[0], 2) + pow(_deviceSpeed[1], 2) + pow(_deviceSpeed[2], 2));
       notifyListeners();
     });
   }

@@ -1,4 +1,9 @@
+import 'dart:io';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_project/src/util/StorageManager.dart';
+import 'package:flutter_project/src/views/HomeView.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -10,12 +15,26 @@ class LoginView extends StatefulWidget {
 class _Loginview extends State<LoginView> {
   String _username = '';
   String _password = '';
+  String _error = '';
+  final StorageManager _storageManager = StorageManager();
 
-  void _login() {
-    // temporary login for admin
-    if (_username == 'admin' && _password == 'admin') {
-      // go to homeview
-      
+  void _login() async {
+    try {
+      // try to find a file with the username
+      File file = await _storageManager.loadFile(_username);
+
+      // if the file is found, check the password
+      if (file.existsSync()) {
+        dynamic jsonFile = await _storageManager.readFileAsJson(_username);
+
+        if (jsonFile['password'] == _password) {
+          if (context.mounted) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeView()));
+          }
+        }
+      }
+    } catch (e) {
+      _error = 'Invalid username or password';
     }
   }
 
@@ -68,7 +87,8 @@ class _Loginview extends State<LoginView> {
                   ),
                   child: Text('Login', style: Theme.of(context).textTheme.bodyMedium),
                 ),
-              )
+              ),
+              Text(_error, style: Theme.of(context).textTheme.bodySmall)
             ],
           ),
         ),
