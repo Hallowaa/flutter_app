@@ -45,6 +45,7 @@ class GameDataProvider extends ChangeNotifier {
   Player get player => _player;
 
   GameDataProvider(ESenseMovementProvider eSenseMovementProvider) {
+    loadPlayer('default');
     Timer.periodic(const Duration(seconds: 1), (timer) {
       int levelBefore = getLevel(_player.experience);
       addExperience(eSenseMovementProvider.deviceSpeedMagnitude.floor());

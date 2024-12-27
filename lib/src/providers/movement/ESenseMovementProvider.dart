@@ -29,7 +29,7 @@ class ESenseMovementProvider extends MovementProvider {
   List<double> get speed => _deviceSpeed;
   double get deviceSpeedMagnitude => _deviceSpeedMagnitude;
 
-  bool _useDeviceSensors = false;
+  bool _useDeviceSensors = true;
 
   bool get useDeviceSensors => _useDeviceSensors;
   StreamSubscription? _deviceSubscription;
@@ -44,7 +44,9 @@ class ESenseMovementProvider extends MovementProvider {
     }
   }
 
-  ESenseMovementProvider();
+  ESenseMovementProvider() {
+    alternativeConnect();
+  }
 
   @override
   void connect() async{

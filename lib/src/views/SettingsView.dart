@@ -16,7 +16,10 @@ class _SettingsViewState extends State<SettingsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings', style: Theme.of(context).textTheme.titleLarge,),
+        title: Text(
+          'Settings',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         automaticallyImplyLeading: false,
         backgroundColor: Theme.of(context).primaryColorLight,
       ),
@@ -27,12 +30,17 @@ class _SettingsViewState extends State<SettingsView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Use device sensors', style: Theme.of(context).textTheme.bodyMedium),
+                Text('Use device sensors',
+                    style: Theme.of(context).textTheme.bodyMedium),
                 Switch(
-                  value: Provider.of<ESenseMovementProvider>(context, listen: false).useDeviceSensors,
+                  value: Provider.of<ESenseMovementProvider>(context,
+                          listen: false)
+                      .useDeviceSensors,
                   onChanged: (value) {
                     setState(() {
-                      Provider.of<ESenseMovementProvider>(context, listen: false).useDeviceSensors = value;
+                      Provider.of<ESenseMovementProvider>(context,
+                              listen: false)
+                          .useDeviceSensors = value;
                     });
                   },
                 ),
