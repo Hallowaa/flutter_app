@@ -13,8 +13,93 @@ class PassivesView extends StatefulWidget {
 }
 
 class _PassivesViewState extends State<PassivesView> {
+  bool _canAfford(int cost) {
+    return Provider.of<GameDataProvider>(context, listen: false)
+            .remainingPassivePoints() >=
+        cost;
+  }
+
+  bool _canUpgradeSpeed() {
+    GameDataProvider provider =
+        Provider.of<GameDataProvider>(context, listen: false);
+    return _canAfford(1) &&
+        provider.player.speedBoost < provider.speedBoostValues.length - 1;
+  }
+
+  bool _canUpgradeFrequency() {
+    GameDataProvider provider =
+        Provider.of<GameDataProvider>(context, listen: false);
+    return _canAfford(1) &&
+        provider.player.speedFrequency <
+            provider.speedFrequencyValues.length - 1;
+  }
+
+  bool _canUpgradeExp() {
+    GameDataProvider provider =
+        Provider.of<GameDataProvider>(context, listen: false);
+    return _canAfford(1) &&
+        provider.player.expBoost < provider.expBoostValues.length - 1;
+  }
+
+  String _upgradeSpeedText() {
+    GameDataProvider provider =
+        Provider.of<GameDataProvider>(context, listen: false);
+    String result =
+        '${provider.speedBoostValues[provider.player.speedBoost]}x ';
+    if (_canUpgradeSpeed()) {
+      result +=
+          '-> ${provider.speedBoostValues[provider.player.speedBoost + 1]}x';
+    }
+
+    return result;
+  }
+
+  String _upgradeFrequencyText() {
+    GameDataProvider provider =
+        Provider.of<GameDataProvider>(context, listen: false);
+    String result =
+        '${provider.speedFrequencyValues[provider.player.speedFrequency]} sec ';
+    if (_canUpgradeFrequency()) {
+      result +=
+          '-> ${provider.speedFrequencyValues[provider.player.speedFrequency + 1]} sec';
+    }
+
+    return result;
+  }
+
+  String _upgradeExpText() {
+    GameDataProvider provider =
+        Provider.of<GameDataProvider>(context, listen: false);
+    String result = '${provider.expBoostValues[provider.player.expBoost]}x ';
+    if (_canUpgradeExp()) {
+      result += '-> ${provider.expBoostValues[provider.player.expBoost + 1]}x';
+    }
+
+    return result;
+  }
+
+  void _upgradeSpeed() {
+    if (_canUpgradeSpeed()) {
+      Provider.of<GameDataProvider>(context, listen: false).upgradeSpeed();
+    }
+  }
+
+  void _upgradeFrequency() {
+    if (_canUpgradeFrequency()) {
+      Provider.of<GameDataProvider>(context, listen: false).upgradeFrequency();
+    }
+  }
+
+  void _upgradeExp() {
+    if (_canUpgradeExp()) {
+      Provider.of<GameDataProvider>(context, listen: false).upgradeExp();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    GameDataProvider provider =
+        Provider.of<GameDataProvider>(context, listen: false);
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(100),
@@ -22,7 +107,7 @@ class _PassivesViewState extends State<PassivesView> {
               Consumer<GameDataProvider>(builder: (context, provider, child) {
             return AppBar(
               automaticallyImplyLeading: false,
-              title: Text(provider.player.name,
+              title: Text('Passives',
                   style: Theme.of(context).textTheme.titleLarge),
               bottom: PreferredSize(
                   preferredSize: const Size.fromHeight(20),
@@ -34,9 +119,7 @@ class _PassivesViewState extends State<PassivesView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                            'Level ${provider.getLevel(provider.player.experience)}',
-                            style: Theme.of(context).textTheme.bodySmall),
-                        Text('${provider.player.experience} EXP',
+                            'Remaining passive points ${provider.remainingPassivePoints()}',
                             style: Theme.of(context).textTheme.bodySmall),
                       ],
                     ),
@@ -44,7 +127,175 @@ class _PassivesViewState extends State<PassivesView> {
               backgroundColor: Theme.of(context).primaryColorLight,
             );
           })),
-      body: const Padding(padding: EdgeInsets.all(16), child: null),
+      body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: GridView.count(
+            crossAxisCount: 1,
+            mainAxisSpacing: 16,
+            childAspectRatio: (1 / .4),
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColorLight,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 48),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Image(
+                          image: AssetImage('assets/images/tabi.png'),
+                          height: 100,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Increased speed',
+                              style: Theme.of(context).textTheme.bodySmall,
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              'Level ${Provider.of<GameDataProvider>(context).player.speedBoost}',
+                              style: Theme.of(context).textTheme.bodySmall,
+                              textAlign: TextAlign.center,
+                            ),
+                            ElevatedButton(
+                              onPressed:
+                                  _canUpgradeSpeed() ? _upgradeSpeed : null,
+                              style: ElevatedButton.styleFrom(
+                                  disabledBackgroundColor:
+                                      Theme.of(context).primaryColorDark,
+                                  disabledForegroundColor: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .color,
+                                  fixedSize: const Size(100, 40)),
+                              child: Text(
+                                  provider.speedBoostValues.length - 1 <=
+                                          provider.player.speedBoost
+                                      ? 'MAX'
+                                      : 'Cost 1'),
+                            ),
+                            Text(
+                              _upgradeSpeedText(),
+                              style: Theme.of(context).textTheme.bodySmall,
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        ),
+                      ]),
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColorLight,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 48),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Image(
+                        image: AssetImage('assets/images/stopwatch.png'),
+                        height: 100,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Increased frequency',
+                            style: Theme.of(context).textTheme.bodySmall,
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            'Level ${Provider.of<GameDataProvider>(context).player.speedFrequency}',
+                            style: Theme.of(context).textTheme.bodySmall,
+                            textAlign: TextAlign.center,
+                          ),
+                          ElevatedButton(
+                            onPressed: _canUpgradeFrequency()
+                                ? _upgradeFrequency
+                                : null,
+                            style: ElevatedButton.styleFrom(
+                                disabledBackgroundColor:
+                                    Theme.of(context).primaryColorDark,
+                                disabledForegroundColor: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .color,
+                                fixedSize: const Size(100, 40)),
+                            child: Text(
+                                provider.speedFrequencyValues.length - 1 <=
+                                        provider.player.speedFrequency
+                                    ? 'MAX'
+                                    : 'Cost 1'),
+                          ),
+                          Text(
+                            _upgradeFrequencyText(),
+                            style: Theme.of(context).textTheme.bodySmall,
+                            textAlign: TextAlign.center,
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColorLight,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 48),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Image(
+                        image: AssetImage('assets/images/perandus.png'),
+                        height: 100,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Increased experience',
+                            style: Theme.of(context).textTheme.bodySmall,
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            'Level ${Provider.of<GameDataProvider>(context).player.expBoost}',
+                            style: Theme.of(context).textTheme.bodySmall,
+                            textAlign: TextAlign.center,
+                          ),
+                          ElevatedButton(
+                            onPressed: _canUpgradeExp() ? _upgradeExp : null,
+                            style: ElevatedButton.styleFrom(
+                                disabledBackgroundColor:
+                                    Theme.of(context).primaryColorDark,
+                                disabledForegroundColor: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .color,
+                                fixedSize: const Size(100, 40)),
+                            child: Text(provider.expBoostValues.length - 1 <=
+                                    provider.player.expBoost
+                                ? 'MAX'
+                                : 'Cost 1'),
+                          ),
+                          Text(
+                            _upgradeExpText(),
+                            style: Theme.of(context).textTheme.bodySmall,
+                            textAlign: TextAlign.center,
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          )),
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
           labelTextStyle:

@@ -3,7 +3,10 @@ import 'dart:convert';
 class Player {
   String name = 'Player';
   String password = '';
-  int experience = 0;
+  double experience = 0;
+  double dabloons = 0;
+  int baseHealth = 100;
+  int baseDamage = 10;
 
   // stats
   int strength = 0;

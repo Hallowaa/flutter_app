@@ -37,7 +37,7 @@ class _HomeViewState extends State<HomeView> {
                         Text(
                             'Level ${provider.getLevel(provider.player.experience)}',
                             style: Theme.of(context).textTheme.bodySmall),
-                        Text('${provider.player.experience} EXP',
+                        Text('${provider.player.experience.floor()} EXP',
                             style: Theme.of(context).textTheme.bodySmall),
                       ],
                     ),
@@ -46,30 +46,75 @@ class _HomeViewState extends State<HomeView> {
             );
           })),
       body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Consumer<ESenseMovementProvider>(
-                  builder: (content, provider, child) {
-                return Text(
-                    'Speed: ${provider.deviceSpeedMagnitude.toStringAsFixed(2)}',
-                    style: Theme.of(context).textTheme.bodyMedium);
-              }),
-              const SizedBox(height: 20),
-              Consumer<ESenseMovementProvider>(
-                  builder: (content, provider, child) {
-                return ElevatedButton(
-                  onPressed: () {
-                    provider.alternativeConnect();
-                  },
-                  child: const Text('Use device sensor'),
-                );
-              })
-            ],
-          ),
-        ),
+        child: Consumer<GameDataProvider>(builder: (context, provider, child) {
+          return Container(
+            padding: const EdgeInsets.all(24),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColorLight,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Speed',
+                                style: Theme.of(context).textTheme.bodyMedium),
+                            Text(
+                                (Provider.of<ESenseMovementProvider>(context)
+                                    .deviceSpeedMagnitude * provider
+                                        .speedBoostValues[provider.player.speedBoost])
+                                    .toStringAsFixed(2),
+                                style: Theme.of(context).textTheme.bodyMedium),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Strength',
+                                style: Theme.of(context).textTheme.bodyMedium),
+                            Text('${provider.player.strength}',
+                                style: Theme.of(context).textTheme.bodyMedium),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Dexterity',
+                                style: Theme.of(context).textTheme.bodyMedium),
+                            Text('${provider.player.dexterity}',
+                                style: Theme.of(context).textTheme.bodyMedium),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Intelligence',
+                                style: Theme.of(context).textTheme.bodyMedium),
+                            Text('${provider.player.intelligence}',
+                                style: Theme.of(context).textTheme.bodyMedium),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 20),
+                const Image(
+                  image: AssetImage('assets/images/player.png'),
+                  height: 300,
+                )
+              ],
+            ),
+          );
+        }),
       ),
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(

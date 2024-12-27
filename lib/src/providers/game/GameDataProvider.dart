@@ -8,6 +8,8 @@ import 'package:flutter_project/src/util/StorageManager.dart';
 class GameDataProvider extends ChangeNotifier {
   Player _player = Player();
   final StorageManager _storageManager = StorageManager();
+  Timer? _timer;
+  late ESenseMovementProvider _eSenseMovementProvider;
   final Map<int, int> _levels = {
     0: 0,
     1: 1000,
@@ -42,18 +44,29 @@ class GameDataProvider extends ChangeNotifier {
     30: 830000
   };
 
+  double _unboostedSpeed = 0.0;
+  final List<double> _speedBoostValues = [1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2];
+  final List<double> _speedFrequencyValues = [1.0, 0.9, 0.8, 0.7, 0.6, 0.5];
+  final List<double> _expBoostValues = [1.0, 1.1, 1.2, 1.4, 1.6, 1.8, 2.0];
+
+  double get unboostedSpeed => _unboostedSpeed;
+  List<double> get speedBoostValues => _speedBoostValues;
+  List<double> get speedFrequencyValues => _speedFrequencyValues;
+  List<double> get expBoostValues => _expBoostValues;
   Player get player => _player;
 
   GameDataProvider(ESenseMovementProvider eSenseMovementProvider) {
     loadPlayer('default');
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      int levelBefore = getLevel(_player.experience);
-      addExperience(eSenseMovementProvider.deviceSpeedMagnitude.floor());
-      int levelAfter = getLevel(_player.experience);
+    _eSenseMovementProvider = eSenseMovementProvider;
+    updateTimer();
+  }
 
-      if (levelAfter > levelBefore) {
-        // show level up dialog
-      }
+  void updateTimer() {
+    _timer?.cancel();
+    int sec = (1000 * _speedFrequencyValues[_player.speedFrequency]).toInt();
+    _timer = Timer.periodic(Duration(milliseconds: sec), (timer) {
+      _unboostedSpeed = _eSenseMovementProvider.deviceSpeedMagnitude;
+      addExperience(_eSenseMovementProvider.deviceSpeedMagnitude * _speedBoostValues[_player.speedBoost]);
     });
   }
 
@@ -79,10 +92,10 @@ class GameDataProvider extends ChangeNotifier {
     _storageManager.saveFile(_player.name, _player.toJson());
   }
 
-  int getLevel(int experience) {
+  int getLevel(double experience) {
     int level = 0;
-    for (int i = 0; i < _levels.length; i++) {
-      if (experience < _levels[i]!) {
+    for (int i = 0; i < _levels.length - 1; i++) {
+      if (experience < _levels[i + 1]!) {
         level = i;
         break;
       }
@@ -90,9 +103,35 @@ class GameDataProvider extends ChangeNotifier {
     return level;
   }
 
-  void addExperience(int experience) {
-    _player.experience += experience;
+  void addExperience(double experience) {
+    _player.experience += experience * _expBoostValues[_player.expBoost].toInt();
     savePlayer();
+    notifyListeners();
+  }
+
+  int remainingExperienceForNextLevel() {
+    int level = getLevel(_player.experience);
+    return _levels[level]! - _player.experience.floor();
+  }
+
+  int remainingPassivePoints() {
+    return getLevel(_player.experience) - _player.strength - _player.dexterity - _player.intelligence - _player.speedBoost - _player.speedFrequency - _player.expBoost;
+  }
+
+  void upgradeSpeed() {
+    _player.speedBoost++;
+    updateTimer();
+    notifyListeners();
+  }
+
+  void upgradeFrequency() {
+    _player.speedFrequency++;
+    updateTimer();
+    notifyListeners();
+  }
+
+  void upgradeExp() {
+    _player.expBoost++;
     notifyListeners();
   }
 }

@@ -35,6 +35,8 @@ class _MyAppState extends State<MyApp> {
           titleLarge: TextStyle(color: Colors.white, fontSize: 34),
           bodyMedium: TextStyle(color: Colors.white, fontSize: 18),
           bodySmall: TextStyle(color: Color.fromARGB(155, 255, 255, 255), fontSize: 12),
+          labelSmall: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 12),
+          displaySmall: TextStyle(color: Colors.white, fontSize: 12),
         ),
       ),
       localizationsDelegates: const [
