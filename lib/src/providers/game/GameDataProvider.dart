@@ -44,12 +44,13 @@ class GameDataProvider extends ChangeNotifier {
     30: 830000
   };
 
-  double _unboostedSpeed = 0.0;
   final List<double> _speedBoostValues = [1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2];
   final List<double> _speedFrequencyValues = [1.0, 0.9, 0.8, 0.7, 0.6, 0.5];
   final List<double> _expBoostValues = [1.0, 1.1, 1.2, 1.4, 1.6, 1.8, 2.0];
 
-  double get unboostedSpeed => _unboostedSpeed;
+  int healthPerLevel = 30;
+  int damagePerLevel = 4;
+
   List<double> get speedBoostValues => _speedBoostValues;
   List<double> get speedFrequencyValues => _speedFrequencyValues;
   List<double> get expBoostValues => _expBoostValues;
@@ -65,7 +66,6 @@ class GameDataProvider extends ChangeNotifier {
     _timer?.cancel();
     int sec = (1000 * _speedFrequencyValues[_player.speedFrequency]).toInt();
     _timer = Timer.periodic(Duration(milliseconds: sec), (timer) {
-      _unboostedSpeed = _eSenseMovementProvider.deviceSpeedMagnitude;
       addExperience(_eSenseMovementProvider.deviceSpeedMagnitude * _speedBoostValues[_player.speedBoost]);
     });
   }
@@ -103,6 +103,10 @@ class GameDataProvider extends ChangeNotifier {
     return level;
   }
 
+  int getExperience(int level) {
+    return _levels[level]!;
+  }
+
   void addExperience(double experience) {
     _player.experience += experience * _expBoostValues[_player.expBoost].toInt();
     savePlayer();
@@ -133,5 +137,13 @@ class GameDataProvider extends ChangeNotifier {
   void upgradeExp() {
     _player.expBoost++;
     notifyListeners();
+  }
+
+  int getHealth() {
+    return _player.baseHealth + healthPerLevel * getLevel(_player.experience);
+  }
+
+  int getDamage() {
+    return _player.baseDamage + damagePerLevel * getLevel(_player.experience);
   }
 }

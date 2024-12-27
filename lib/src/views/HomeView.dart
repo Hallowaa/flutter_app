@@ -14,6 +14,17 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+
+  double _progressValue() {
+    final provider = Provider.of<GameDataProvider>(context, listen: false);
+    final currentLevel = provider.getLevel(provider.player.experience);
+    final nextLevel = currentLevel + 1;
+    final currentExperience = provider.getExperience(currentLevel);
+    final nextExperience = provider.getExperience(nextLevel);
+    return (provider.player.experience - currentExperience) / (nextExperience - currentExperience);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,8 +34,21 @@ class _HomeViewState extends State<HomeView> {
               Consumer<GameDataProvider>(builder: (context, provider, child) {
             return AppBar(
               automaticallyImplyLeading: false,
-              title: Text(provider.player.name,
-                  style: Theme.of(context).textTheme.titleLarge),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(provider.player.name,
+                      style: Theme.of(context).textTheme.titleLarge),
+                  SizedBox(
+                    width: 200,
+                    child: LinearProgressIndicator(
+                      value: _progressValue(),
+                      backgroundColor: Theme.of(context).primaryColorDark,
+                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+                    ),
+                  ),
+                ],
+              ),
               bottom: PreferredSize(
                   preferredSize: const Size.fromHeight(20),
                   child: Container(
