@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_project/src/model/entity/player.dart';
+import 'package:flutter_project/src/model/entity/Player.dart';
 import 'package:flutter_project/src/providers/movement/ESenseMovementProvider.dart';
 import 'package:flutter_project/src/util/StorageManager.dart';
 
@@ -140,10 +140,10 @@ class GameDataProvider extends ChangeNotifier {
   }
 
   int getHealth() {
-    return _player.baseHealth + healthPerLevel * getLevel(_player.experience);
+    return _player.health + healthPerLevel * getLevel(_player.experience);
   }
 
   int getDamage() {
-    return _player.baseDamage + damagePerLevel * getLevel(_player.experience);
+    return _player.damage + damagePerLevel * getLevel(_player.experience);
   }
 }

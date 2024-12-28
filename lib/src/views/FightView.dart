@@ -1,55 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_project/src/providers/movement/ESenseMovementProvider.dart';
-import 'package:flutter_project/src/views/FightView.dart';
 import 'package:flutter_project/src/views/HomeView.dart';
 import 'package:flutter_project/src/views/PassivesView.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_project/src/views/SettingsView.dart';
 
-class SettingsView extends StatefulWidget {
-  const SettingsView({super.key});
+class FightView extends StatefulWidget {
+  const FightView({super.key});
 
   @override
-  State<SettingsView> createState() => _SettingsViewState();
+  State<FightView> createState() => _FightViewState();
 }
 
-class _SettingsViewState extends State<SettingsView> {
+class _FightViewState extends State<FightView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Settings',
+          'Fight',
           style: Theme.of(context).textTheme.titleLarge,
         ),
         automaticallyImplyLeading: false,
         backgroundColor: Theme.of(context).primaryColorLight,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Use device sensors',
-                    style: Theme.of(context).textTheme.bodyMedium),
-                Switch(
-                  value: Provider.of<ESenseMovementProvider>(context,
-                          listen: false)
-                      .useDeviceSensors,
-                  onChanged: (value) {
-                    setState(() {
-                      Provider.of<ESenseMovementProvider>(context,
-                              listen: false)
-                          .useDeviceSensors = value;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+      body: Container(),
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
           labelTextStyle:
@@ -66,7 +39,7 @@ class _SettingsViewState extends State<SettingsView> {
             NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
           ],
           backgroundColor: Theme.of(context).primaryColorLight,
-          selectedIndex: 0,
+          selectedIndex: 2,
           onDestinationSelected: (index) {
             switch (index) {
               case 0:

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/src/providers/game/GameDataProvider.dart';
+import 'package:flutter_project/src/views/FightView.dart';
 import 'package:flutter_project/src/views/HomeView.dart';
 import 'package:flutter_project/src/views/SettingsView.dart';
 import 'package:provider/provider.dart';
@@ -22,23 +23,19 @@ class _PassivesViewState extends State<PassivesView> {
   bool _canUpgradeSpeed() {
     GameDataProvider provider =
         Provider.of<GameDataProvider>(context, listen: false);
-    return _canAfford(1) &&
-        provider.player.speedBoost < provider.speedBoostValues.length - 1;
+    return provider.player.speedBoost < provider.speedBoostValues.length - 1;
   }
 
   bool _canUpgradeFrequency() {
     GameDataProvider provider =
         Provider.of<GameDataProvider>(context, listen: false);
-    return _canAfford(1) &&
-        provider.player.speedFrequency <
-            provider.speedFrequencyValues.length - 1;
+    return provider.player.speedFrequency < provider.speedFrequencyValues.length - 1;
   }
 
   bool _canUpgradeExp() {
     GameDataProvider provider =
         Provider.of<GameDataProvider>(context, listen: false);
-    return _canAfford(1) &&
-        provider.player.expBoost < provider.expBoostValues.length - 1;
+    return provider.player.expBoost < provider.expBoostValues.length - 1;
   }
 
   String _upgradeSpeedText() {
@@ -79,19 +76,19 @@ class _PassivesViewState extends State<PassivesView> {
   }
 
   void _upgradeSpeed() {
-    if (_canUpgradeSpeed()) {
+    if (_canUpgradeSpeed() && _canAfford(1)) {
       Provider.of<GameDataProvider>(context, listen: false).upgradeSpeed();
     }
   }
 
   void _upgradeFrequency() {
-    if (_canUpgradeFrequency()) {
+    if (_canUpgradeFrequency() && _canAfford(1)) {
       Provider.of<GameDataProvider>(context, listen: false).upgradeFrequency();
     }
   }
 
   void _upgradeExp() {
-    if (_canUpgradeExp()) {
+    if (_canUpgradeExp() && _canAfford(1)) {
       Provider.of<GameDataProvider>(context, listen: false).upgradeExp();
     }
   }
@@ -162,7 +159,7 @@ class _PassivesViewState extends State<PassivesView> {
                             ),
                             ElevatedButton(
                               onPressed:
-                                  _canUpgradeSpeed() ? _upgradeSpeed : null,
+                                  _canUpgradeSpeed() && _canAfford(1) ? _upgradeSpeed : null,
                               style: ElevatedButton.styleFrom(
                                   disabledBackgroundColor:
                                       Theme.of(context).primaryColorDark,
@@ -214,7 +211,7 @@ class _PassivesViewState extends State<PassivesView> {
                             textAlign: TextAlign.center,
                           ),
                           ElevatedButton(
-                            onPressed: _canUpgradeFrequency()
+                            onPressed: _canUpgradeFrequency() && _canAfford(1)
                                 ? _upgradeFrequency
                                 : null,
                             style: ElevatedButton.styleFrom(
@@ -269,7 +266,7 @@ class _PassivesViewState extends State<PassivesView> {
                             textAlign: TextAlign.center,
                           ),
                           ElevatedButton(
-                            onPressed: _canUpgradeExp() ? _upgradeExp : null,
+                            onPressed: _canUpgradeExp() && _canAfford(1) ? _upgradeExp : null,
                             style: ElevatedButton.styleFrom(
                                 disabledBackgroundColor:
                                     Theme.of(context).primaryColorDark,
@@ -307,6 +304,8 @@ class _PassivesViewState extends State<PassivesView> {
                 icon: Icon(Icons.settings), label: 'Settings'),
             NavigationDestination(
                 icon: Icon(Icons.arrow_upward), label: 'Passives'),
+            NavigationDestination(
+                icon: Icon(Icons.auto_awesome_outlined), label: 'Fight'),
             NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
           ],
           backgroundColor: Theme.of(context).primaryColorLight,
@@ -326,6 +325,10 @@ class _PassivesViewState extends State<PassivesView> {
                         builder: (context) => const PassivesView()));
                 break;
               case 2:
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const FightView()));
+                break;
+              case 3:
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const HomeView()));
                 break;
