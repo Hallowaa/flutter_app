@@ -11,7 +11,7 @@ class Player {
   double dabloons = 0;
   final int _baseHealth = 100;
   final int _baseDamage = 10;
-  int maxDamage = 15;
+  int extraDamage = 15;
 
   // stats
   int _strength = 0;

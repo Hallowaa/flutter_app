@@ -62,161 +62,67 @@ class _FightViewState extends State<FightView> {
             )),
         backgroundColor: Theme.of(context).primaryColorLight,
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
+      body: Padding(
+        padding: const EdgeInsets.only(top: 16, left: 8, right: 8, bottom: 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 60,
+              child: Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColorLight,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text(
-                      'Health ${gp.fightManager != null ? gp.fightManager!.playerHealth : gp.player.health}',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColorLight,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text(
-                      'Damage ${gp.player.damage}',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  )
-                ],
-              ),
-              Builder(builder: (context) {
-                List<Widget> result = [];
-                List<Widget> rowChildren = [];
-
-                ElevatedButton startEndBtn = ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColorLight),
-                  onPressed: () {
-                    gp.fightManager == null ? gp.startFight() : gp.endFight();
-                  },
-                  child: Text(
-                      gp.fightManager == null ? 'Start Fight' : 'End Fight',
-                      style: Theme.of(context).textTheme.bodyMedium),
-                );
-
-                rowChildren.add(startEndBtn);
-
-                if (gp.fightManager != null) {
-                  Column monsterInfo = Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Image.asset('assets/images/playerFace.png',
+                      height: 60, width: 60),
+                  const SizedBox(width: 10),
+                  Expanded(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColorLight,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Text(
-                          gp.fightManager!.monster.name,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
+                      const SizedBox(height: 7),
+                      LinearProgressIndicator(
+                        value: gp.fightManager == null
+                            ? 1
+                            : gp.fightManager!.playerHealth / gp.player.health,
+                        valueColor:
+                            const AlwaysStoppedAnimation<Color>(Colors.green),
+                        borderRadius: BorderRadius.circular(5),
                       ),
                       const SizedBox(height: 8),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColorLight,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Text(
-                              'Health ${gp.fightManager!.monster.health}',
-                              style: Theme.of(context).textTheme.bodyMedium,
+                          Row(children: [
+                            Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColorLight,
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text(
+                                gp.player.name,
+                                style: Theme.of(context).textTheme.bodySmall,
+                                textAlign: TextAlign.left,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColorLight,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Text(
-                              'Damage ${gp.fightManager!.monster.minDamage} - ${gp.fightManager!.monster.maxDamage}',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ),
+                            const SizedBox(width: 4),
+                            Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColorLight,
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text(
+                                'Damage: ${gp.getDamage()} - ${gp.getDamage() + gp.player.extraDamage}',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            )
+                          ])
                         ],
-                      ),
+                      )
                     ],
-                  );
-
-                  SizedBox listView = SizedBox(
-                    height: 150,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: gp.fightManager!.logs.length > 10
-                          ? 10
-                          : gp.fightManager!.logs.length,
-                      itemBuilder: (context, index) {
-                        int logIndex = gp.fightManager!.logs.length > 10
-                            ? gp.fightManager!.logs.length - 10 + index
-                            : index;
-                        return Center(
-                          child: Text(
-                            gp.fightManager!.logs[logIndex],
-                            style: TextStyle(
-                                color: gp.fightManager!.entities[logIndex % 2] is Player
-                                    ? Colors.green
-                                    : Colors.red,
-                                fontSize: 12
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-
-                  result.addAll([
-                    monsterInfo,
-                    const SizedBox(height: 8),
-                    gp.fightManager!.monster.image,
-                    const SizedBox(height: 8),
-                    listView
-                  ]);
-
-                  // add a button to do a player turn
-                  ElevatedButton smackBtn = ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColorLight),
-                    onPressed: () {
-                      gp.fightManager!.doTurn();
-                      setState(() {});
-                    },
-                    child: Text('Smack',
-                        style: Theme.of(context).textTheme.bodyMedium),
-                  );
-
-                  rowChildren.addAll([const SizedBox(width: 20), smackBtn]);
-                }
-
-                Row row = Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: rowChildren);
-
-                result.add(row);
-
-                return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: result);
-              })
-            ],
-          ),
+                  ))
+                ],
+              ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: NavigationBarTheme(
