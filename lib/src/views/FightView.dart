@@ -29,99 +29,294 @@ class _FightViewState extends State<FightView> {
     GameDataProvider gp = Provider.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(gp.player.name, style: Theme.of(context).textTheme.titleLarge),
-            SizedBox(
-              width: 200,
-              child: LinearProgressIndicator(
-                value: _progressValue(),
-                backgroundColor: Theme.of(context).primaryColorDark,
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
-              ),
-            ),
-          ],
-        ),
-        bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(20),
-            child: Container(
-              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 12),
-              alignment: Alignment.centerLeft,
-              child: Row(
+      appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(100),
+          child:
+              Consumer<GameDataProvider>(builder: (context, provider, child) {
+            return AppBar(
+              automaticallyImplyLeading: false,
+              title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Level ${gp.getLevel(gp.player.experience)}',
-                      style: Theme.of(context).textTheme.bodySmall),
-                  Text('${gp.player.experience.floor()} EXP',
-                      style: Theme.of(context).textTheme.bodySmall),
+                  Text(provider.player.name,
+                      style: Theme.of(context).textTheme.titleLarge),
+                  SizedBox(
+                    width: 200,
+                    child: LinearProgressIndicator(
+                      value: _progressValue(),
+                      backgroundColor: Theme.of(context).primaryColorDark,
+                      valueColor:
+                          const AlwaysStoppedAnimation<Color>(Colors.green),
+                    ),
+                  ),
                 ],
               ),
-            )),
-        backgroundColor: Theme.of(context).primaryColorLight,
-      ),
+              bottom: PreferredSize(
+                  preferredSize: const Size.fromHeight(20),
+                  child: Container(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, bottom: 12),
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                            'Level ${provider.getLevel(provider.player.experience)}',
+                            style: Theme.of(context).textTheme.bodySmall),
+                        Text('Dabloons ${provider.player.dabloons}',
+                            style: Theme.of(context).textTheme.bodySmall),
+                        Text('${provider.player.experience.floor()} EXP',
+                            style: Theme.of(context).textTheme.bodySmall),
+                      ],
+                    ),
+                  )),
+              backgroundColor: Theme.of(context).primaryColorLight,
+            );
+          })),
       body: Padding(
         padding: const EdgeInsets.only(top: 16, left: 8, right: 8, bottom: 16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              height: 60,
-              child: Row(
+            Expanded(
+              child: Column(
                 children: [
-                  Image.asset('assets/images/playerFace.png',
-                      height: 60, width: 60),
-                  const SizedBox(width: 10),
-                  Expanded(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 7),
-                      LinearProgressIndicator(
-                        value: gp.fightManager == null
-                            ? 1
-                            : gp.fightManager!.playerHealth / gp.player.health,
-                        valueColor:
-                            const AlwaysStoppedAnimation<Color>(Colors.green),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(children: [
-                            Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColorLight,
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: Text(
-                                gp.player.name,
-                                style: Theme.of(context).textTheme.bodySmall,
-                                textAlign: TextAlign.left,
-                              ),
+                  SizedBox(
+                    height: 60,
+                    child: Row(
+                      children: [
+                        Image.asset('assets/images/playerFace.png',
+                            height: 60, width: 60),
+                        const SizedBox(width: 10),
+                        Expanded(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 7),
+                            LinearProgressIndicator(
+                              value: gp.fightManager == null
+                                  ? 1
+                                  : gp.fightManager!.playerHealth /
+                                      gp.player.health,
+                              valueColor: const AlwaysStoppedAnimation<Color>(
+                                  Colors.green),
+                              borderRadius: BorderRadius.circular(5),
                             ),
-                            const SizedBox(width: 4),
-                            Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColorLight,
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: Text(
-                                'Damage: ${gp.getDamage()} - ${gp.getDamage() + gp.player.extraDamage}',
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                        color:
+                                            Theme.of(context).primaryColorLight,
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Text(
+                                      gp.player.name,
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Container(
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                        color:
+                                            Theme.of(context).primaryColorLight,
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Text(
+                                      'Damage ${gp.getDamage()} - ${gp.getDamage() + gp.player.extraDamage}',
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                  )
+                                ]),
+                                Container(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                      color:
+                                          Theme.of(context).primaryColorLight,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: Text(
+                                    'Health ${gp.fightManager == null ? gp.player.health : gp.fightManager!.playerHealth}',
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                )
+                              ],
                             )
-                          ])
+                          ],
+                        ))
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Builder(builder: (context) {
+                    if (gp.fightManager == null) {
+                      return const SizedBox();
+                    }
+
+                    return SizedBox(
+                      height: 60,
+                      child: Row(
+                        children: [
+                          gp.fightManager!.monster.image,
+                          const SizedBox(width: 10),
+                          Expanded(
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 7),
+                              LinearProgressIndicator(
+                                value: gp.fightManager!.monster.health /
+                                    gp.fightManager!.monsterMaxHealth,
+                                valueColor: const AlwaysStoppedAnimation<Color>(
+                                    Colors.red),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(2),
+                                      decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .primaryColorLight,
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Text(
+                                        gp.fightManager!.monster.name,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall,
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Container(
+                                      padding: const EdgeInsets.all(2),
+                                      decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .primaryColorLight,
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Text(
+                                        'Damage ${gp.fightManager!.monster.minDamage} - ${gp.fightManager!.monster.maxDamage}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall,
+                                      ),
+                                    )
+                                  ]),
+                                  Container(
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                        color:
+                                            Theme.of(context).primaryColorLight,
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Text(
+                                      'Health ${gp.fightManager!.monster.health}',
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ))
                         ],
-                      )
-                    ],
-                  ))
+                      ),
+                    );
+                  })
                 ],
               ),
             ),
+            Builder(builder: (context) {
+              List<Widget> res = [];
+              List<Widget> buttons = [];
+              ElevatedButton startOrEndFightButton = ElevatedButton(
+                onPressed: () {
+                  if (gp.fightManager == null) {
+                    gp.startFight();
+                  } else {
+                    gp.endFight(context);
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColorLight,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                ),
+                child: Text(
+                  gp.fightManager == null ? 'Start Fight' : 'End Fight',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              );
+
+              buttons.add(startOrEndFightButton);
+
+              if (gp.fightManager != null) {
+                ElevatedButton attackButton = ElevatedButton(
+                  onPressed: () {
+                    gp.fightManager!.doTurn(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColorLight,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 20),
+                  ),
+                  child: Text(
+                    'Attack',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                );
+
+                buttons.add(const SizedBox(height: 20));
+                buttons.add(attackButton);
+
+                ListView combatLogs = ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: gp.fightManager!.logs.length,
+                  itemBuilder: (context, index) {
+                    bool isPlayerAttack = index % 2 == 0;
+                    return Align(
+                      alignment: isPlayerAttack
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        child: Text(
+                          gp.fightManager!.logs[index],
+                          style: TextStyle(
+                              color: isPlayerAttack ? Colors.green : Colors.red,
+                              fontSize: 14),
+                        ),
+                      ),
+                    );
+                  },
+                );
+
+                res.add(combatLogs);
+                res.add(const SizedBox(height: 20));
+              }
+
+              return Column(
+                children: [
+                  ...res,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: buttons,
+                  )
+                ],
+              );
+            })
           ],
         ),
       ),
@@ -137,7 +332,7 @@ class _FightViewState extends State<FightView> {
             NavigationDestination(
                 icon: Icon(Icons.arrow_upward), label: 'Passives'),
             NavigationDestination(
-                icon: Icon(Icons.auto_awesome_outlined), label: 'Fight'),
+                icon: Icon(Icons.electric_bolt), label: 'Fight'),
             NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
           ],
           backgroundColor: Theme.of(context).primaryColorLight,

@@ -304,7 +304,7 @@ class _PassivesViewState extends State<PassivesView> {
             NavigationDestination(
                 icon: Icon(Icons.arrow_upward), label: 'Passives'),
             NavigationDestination(
-                icon: Icon(Icons.auto_awesome_outlined), label: 'Fight'),
+                icon: Icon(Icons.electric_bolt), label: 'Fight'),
             NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
           ],
           backgroundColor: Theme.of(context).primaryColorLight,

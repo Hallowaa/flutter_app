@@ -41,3 +41,5 @@ flutter:
     - assets/images/slime.png
     - assets/images/goblin.png
     - assets/images/playerFace.png
+    - assets/images/wolf.png
+    - assets/images/missing.png

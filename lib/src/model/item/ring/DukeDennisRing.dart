@@ -8,7 +8,7 @@ class DukeDennisRing extends Item {
           'Duke Dennis Ring',
           'A ring that gives you the power of Duke Dennis',
           [Boost(intelligence: 3)],
-          Image.asset('assets/images/duke_dennis_ring.png'),
+          Image.asset('assets/images/missing.png'),
           40,
         );
 }

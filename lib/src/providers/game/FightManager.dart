@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_project/src/model/entity/Player.dart';
 import 'package:flutter_project/src/model/entity/monster/Monster.dart';
 import 'package:flutter_project/src/providers/game/GameDataProvider.dart';
@@ -7,6 +8,7 @@ class FightManager {
   final Monster _monster;
   bool done = false;
   int playerHealth = 0;
+  int monsterMaxHealth = 0;
   List<dynamic> entities = [];
   List<String> logs = [];
   int turn = 0;
@@ -17,13 +19,14 @@ class FightManager {
   FightManager(this._player, this._monster,  this._gp) {
     entities = [_player, _monster];
     playerHealth = _player.health;
+    monsterMaxHealth = _monster.health;
   }
 
-  void doTurn() {
-    done = entities.any((entity) => entity.health <= 0);
+  void doTurn(BuildContext context) {
+    done = playerHealth <= 0 || monster.health <= 0;
 
     if (done) {
-      _gp.endFight();
+      _gp.endFight(context);
       return;
     }
 
@@ -36,12 +39,12 @@ class FightManager {
 
     // if monster, do automatic turn
     if (entities[turn] is Monster) {
-      doTurn();
+      doTurn(context);
     }
   }
 
   void _playerAttack() {
-    int damage = _player.damage;
+    int damage = _gp.rollDamage();
     _monster.takeDamage(damage);
     logs.add("${_player.name} hit ${_monster.name} for $damage damage!");
   }

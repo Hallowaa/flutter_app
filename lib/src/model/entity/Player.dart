@@ -8,7 +8,7 @@ class Player {
   String name = 'Player';
   String password = '';
   double experience = 0;
-  double dabloons = 0;
+  int dabloons = 0;
   final int _baseHealth = 100;
   final int _baseDamage = 10;
   int extraDamage = 15;
@@ -81,6 +81,7 @@ class Player {
     name = json['name'] ?? 'Player';
     password = json['password'] ?? '';
     experience = json['experience'] ?? 0;
+    dabloons = json['dabloons'] ?? 0;
 
     _strength = json['strength'] ?? 0;
     _dexterity = json['dexterity'] ?? 0;
@@ -102,6 +103,7 @@ class Player {
       'name': name,
       'password': password,
       'experience': experience,
+      'dabloons': dabloons,
       'strength': _strength,
       'dexterity': _dexterity,
       'intelligence': _intelligence,

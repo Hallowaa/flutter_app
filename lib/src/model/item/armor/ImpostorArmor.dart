@@ -8,7 +8,7 @@ class ImpostorArmor extends Item {
           'Impostor Armor',
           'There might be an impostor among us',
           [Boost(health: 50)],
-          Image.asset('assets/images/impostor_armor.png'),
+          Image.asset('assets/images/missing.png'),
           100,
         );
 }

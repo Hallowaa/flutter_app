@@ -61,6 +61,8 @@ class _HomeViewState extends State<HomeView> {
                         Text(
                             'Level ${provider.getLevel(provider.player.experience)}',
                             style: Theme.of(context).textTheme.bodySmall),
+                        Text('Dabloons ${provider.player.dabloons}',
+                            style: Theme.of(context).textTheme.bodySmall),
                         Text('${provider.player.experience.floor()} EXP',
                             style: Theme.of(context).textTheme.bodySmall),
                       ],
@@ -151,7 +153,7 @@ class _HomeViewState extends State<HomeView> {
                 icon: Icon(Icons.settings), label: 'Settings'),
             NavigationDestination(
                 icon: Icon(Icons.arrow_upward), label: 'Passives'),
-            NavigationDestination(icon: Icon(Icons.auto_awesome_outlined), label: 'Fight'),
+            NavigationDestination(icon: Icon(Icons.electric_bolt), label: 'Fight'),
             NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
           ],
           backgroundColor: Theme.of(context).primaryColorLight,

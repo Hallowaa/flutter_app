@@ -8,7 +8,7 @@ class GlizzySword extends Item {
           'Glizzy Sword',
           'A sword made of glizzy',
           [Boost(dexterity: 2, damage: 5)],
-          Image.asset('assets/images/glizzy_sword.png'),
+          Image.asset('assets/images/missing.png'),
           50,
         );
 }

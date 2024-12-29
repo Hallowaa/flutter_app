@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_project/src/model/entity/Player.dart';
 import 'package:flutter_project/src/model/entity/WeightedManager.dart';
 import 'package:flutter_project/src/model/entity/monster/Monster.dart';
+import 'package:flutter_project/src/model/entity/monster/Monsters.dart';
 import 'package:flutter_project/src/providers/game/FightManager.dart';
 import 'package:flutter_project/src/providers/movement/ESenseMovementProvider.dart';
 import 'package:flutter_project/src/util/StorageManager.dart';
@@ -70,7 +73,8 @@ class GameDataProvider extends ChangeNotifier {
     _timer?.cancel();
     int sec = (1000 * _speedFrequencyValues[_player.speedFrequency]).toInt();
     _timer = Timer.periodic(Duration(milliseconds: sec), (timer) {
-      addExperience(_eSenseMovementProvider.deviceSpeedMagnitude * _speedBoostValues[_player.speedBoost]);
+      addExperience(_eSenseMovementProvider.deviceSpeedMagnitude *
+          _speedBoostValues[_player.speedBoost]);
     });
   }
 
@@ -88,7 +92,7 @@ class GameDataProvider extends ChangeNotifier {
       _player.name = name;
       _storageManager.saveFile(_player.name, _player.toJson());
     }
-    
+
     notifyListeners();
   }
 
@@ -112,7 +116,14 @@ class GameDataProvider extends ChangeNotifier {
   }
 
   void addExperience(double experience) {
-    _player.experience += experience * _expBoostValues[_player.expBoost].toInt();
+    _player.experience +=
+        experience * _expBoostValues[_player.expBoost].toInt();
+    savePlayer();
+    notifyListeners();
+  }
+
+  void addDabloons(int dabloons) {
+    _player.dabloons += dabloons;
     savePlayer();
     notifyListeners();
   }
@@ -123,7 +134,13 @@ class GameDataProvider extends ChangeNotifier {
   }
 
   int remainingPassivePoints() {
-    return getLevel(_player.experience) - _player.strength - _player.dexterity - _player.intelligence - _player.speedBoost - _player.speedFrequency - _player.expBoost;
+    return getLevel(_player.experience) -
+        _player.strength -
+        _player.dexterity -
+        _player.intelligence -
+        _player.speedBoost -
+        _player.speedFrequency -
+        _player.expBoost;
   }
 
   void upgradeSpeed() {
@@ -151,16 +168,53 @@ class GameDataProvider extends ChangeNotifier {
     return _player.damage + damagePerLevel * getLevel(_player.experience);
   }
 
+  int rollDamage() {
+    return _player.damage +
+        damagePerLevel * getLevel(_player.experience) +
+        Random().nextInt(_player.extraDamage);
+  }
+
   void startFight() {
-    Monster monster = Weightedmanager().roll(0, Monster.all.where((m) => m.level <= getLevel(_player.experience)).toList()) as Monster;
+    List<Monster> availableMonsters = Monsters.values.fold<List<Monster>>([], (prev, element) {
+      prev.add(element.monster);
+      return prev;
+    });
+
+    int playerLevel = getLevel(_player.experience);
+
+    for (var monster in availableMonsters) {
+      int levelDifference = (playerLevel - monster.level).abs();
+      double weightBoost = max(-0.5, 1 - (levelDifference / 2));
+      monster.weight *= (1 + weightBoost);
+    }
+
+    Monster monster = Weightedmanager().roll(0, availableMonsters) as Monster;
+
     fightManager = FightManager(_player, monster, this);
     notifyListeners();
   }
 
-  void endFight() {
+  void endFight(BuildContext context) {
     if (fightManager != null) {
       if (fightManager!.monster.health <= 0) {
+        int exp = fightManager!.monster.experience;
+        int dabloons = fightManager!.monster.level * Random().nextInt(5) + fightManager!.monster.level;
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('+$exp EXP', textAlign: TextAlign.center),
+                      const SizedBox(height: 10),
+                      Text('+$dabloons Dabloons',
+                          textAlign: TextAlign.center),
+                    ],
+                  ),
+                  backgroundColor: Theme.of(context).primaryColorLight,
+                ));
         addExperience(fightManager!.monster.experience.toDouble());
+        addDabloons(dabloons);
       }
       fightManager = null;
     }
