@@ -9,5 +9,5 @@ abstract class Item extends Weighted {
   Image image = Image.asset('assets/images/perandus.png');
   bool equipped = false;
 
-  Item(this.name, this.description, this.boosts, this.image, int weight) : super(weight);
+  Item(this.name, this.description, this.boosts, this.image, double weight) : super(weight);
 }

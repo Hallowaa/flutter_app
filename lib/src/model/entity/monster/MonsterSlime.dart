@@ -7,6 +7,7 @@ class MonsterSlime extends Monster {
           'Slime',
           50,
           8,
+          16,
           150,
           1,
           Image.asset('assets/images/slime.png'),

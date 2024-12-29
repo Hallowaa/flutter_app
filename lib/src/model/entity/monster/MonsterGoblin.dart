@@ -7,6 +7,7 @@ class MonsterGoblin extends Monster {
           'Goblin',
           70,
           10,
+          20,
           200,
           2,
           Image.asset('assets/images/goblin.png'),

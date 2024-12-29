@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_project/src/model/entity/Player.dart';
+import 'package:flutter_project/src/model/entity/WeightedManager.dart';
+import 'package:flutter_project/src/model/entity/monster/Monster.dart';
+import 'package:flutter_project/src/providers/game/FightManager.dart';
 import 'package:flutter_project/src/providers/movement/ESenseMovementProvider.dart';
 import 'package:flutter_project/src/util/StorageManager.dart';
 
@@ -47,6 +50,7 @@ class GameDataProvider extends ChangeNotifier {
   final List<double> _speedBoostValues = [1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2];
   final List<double> _speedFrequencyValues = [1.0, 0.9, 0.8, 0.7, 0.6, 0.5];
   final List<double> _expBoostValues = [1.0, 1.1, 1.2, 1.4, 1.6, 1.8, 2.0];
+  FightManager? fightManager;
 
   int healthPerLevel = 30;
   int damagePerLevel = 4;
@@ -145,5 +149,21 @@ class GameDataProvider extends ChangeNotifier {
 
   int getDamage() {
     return _player.damage + damagePerLevel * getLevel(_player.experience);
+  }
+
+  void startFight() {
+    Monster monster = Weightedmanager().roll(0, Monster.all.where((m) => m.level <= getLevel(_player.experience)).toList()) as Monster;
+    fightManager = FightManager(_player, monster, this);
+    notifyListeners();
+  }
+
+  void endFight() {
+    if (fightManager != null) {
+      if (fightManager!.monster.health <= 0) {
+        addExperience(fightManager!.monster.experience.toDouble());
+      }
+      fightManager = null;
+    }
+    notifyListeners();
   }
 }
