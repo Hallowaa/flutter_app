@@ -37,35 +37,35 @@ class _InventoryViewState extends State<InventoryView> {
     }
 
     switch (item.type) {
-      case Itemtype.weapon:
+      case ItemType.weapon:
         {
           if (gp.player.weapon != null) {
             gp.player.weapon!.equipped = false;
           }
           break;
         }
-      case Itemtype.armor:
+      case ItemType.armor:
         {
           if (gp.player.armor != null) {
             gp.player.armor!.equipped = false;
           }
           break;
         }
-      case Itemtype.boots:
+      case ItemType.boots:
         {
           if (gp.player.boots != null) {
             gp.player.boots!.equipped = false;
           }
           break;
         }
-      case Itemtype.ring:
+      case ItemType.ring:
         {
           if (gp.player.ring != null) {
             gp.player.ring!.equipped = false;
           }
           break;
         }
-      case Itemtype.unset:
+      case ItemType.unset:
         {
           break;
         }
@@ -122,7 +122,7 @@ class _InventoryViewState extends State<InventoryView> {
                             children: [
                               Expanded(
                                 child: ElevatedButton(
-                                  onPressed: () => item.type != Itemtype.unset
+                                  onPressed: () => item.type != ItemType.unset
                                       ? {
                                           _equipItem(item),
                                           Navigator.pop(context),

@@ -31,7 +31,7 @@ class Player {
 
   Item? get weapon {
     for (Item item in inventory) {
-      if (item.type == Itemtype.weapon && item.equipped) {
+      if (item.type == ItemType.weapon && item.equipped) {
         return item;
       }
     }
@@ -40,7 +40,7 @@ class Player {
 
   Item? get armor {
     for (Item item in inventory) {
-      if (item.type == Itemtype.armor && item.equipped) {
+      if (item.type == ItemType.armor && item.equipped) {
         return item;
       }
     }
@@ -49,7 +49,7 @@ class Player {
 
   Item? get ring {
     for (Item item in inventory) {
-      if (item.type == Itemtype.ring && item.equipped) {
+      if (item.type == ItemType.ring && item.equipped) {
         return item;
       }
     }
@@ -58,7 +58,7 @@ class Player {
 
   Item? get boots {
     for (Item item in inventory) {
-      if (item.type == Itemtype.boots && item.equipped) {
+      if (item.type == ItemType.boots && item.equipped) {
         return item;
       }
     }
@@ -116,8 +116,10 @@ class Player {
         ? (json['inventory'] as List).map((item) {
             var itemId = item['id'];
             var quantity = item['quantity'];
+            var equipped = item['equipped'];
             Item i = ItemInterpreter.getItem(itemId);
             i.quantity = quantity;
+            i.equipped = equipped;
             return i;
           }).toList()
         : [];
@@ -138,7 +140,7 @@ class Player {
       'expBoost': expBoost,
       'inventory': inventory
           .map((item) =>
-              {'id': ItemInterpreter.getId(item), 'quantity': item.quantity})
+              {'id': ItemInterpreter.getId(item), 'quantity': item.quantity, 'equipped': item.equipped},)
           .toList(),
     });
   }
@@ -181,5 +183,8 @@ class Player {
         }
       }
     }
+
+    // sort inventory by name
+    inventory.sort((a, b) => a.name.compareTo(b.name));
   }
 }

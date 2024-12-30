@@ -4,7 +4,7 @@ import 'package:flutter_project/src/model/item/Boost.dart';
 import 'package:flutter_project/src/model/item/ItemType.dart';
 
 abstract class Item extends Weighted {
-  Itemtype type = Itemtype.unset;
+  ItemType type = ItemType.unset;
   String name = '';
   String description = '';
   List<Boost> boosts = [];

@@ -1,4 +1,4 @@
-enum Itemtype {
+enum ItemType {
   weapon,
   armor,
   ring,

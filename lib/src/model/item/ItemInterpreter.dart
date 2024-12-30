@@ -1,12 +1,12 @@
 import 'package:flutter_project/src/model/item/Item.dart';
-import 'package:flutter_project/src/model/item/armor/ImpostorArmor.dart';
-import 'package:flutter_project/src/model/item/boots/KeemstarBoots.dart';
-import 'package:flutter_project/src/model/item/ring/DukeDennisRing.dart';
-import 'package:flutter_project/src/model/item/weapon/GlizzySword.dart';
+import 'package:flutter_project/src/model/item/armor/ArmorImpostor.dart';
+import 'package:flutter_project/src/model/item/boots/BootsKeemstar.dart';
+import 'package:flutter_project/src/model/item/ring/RingDukeDennis.dart';
+import 'package:flutter_project/src/model/item/weapon/SwordGlizzy.dart';
 
 class ItemInterpreter {
   static List<Item> get items {
-    return [GlizzySword(), DukeDennisRing(), ImpostorArmor(), KeemstarBoots()];
+    return [SwordGlizzy(), RingDukeDennis(), ArmorImpostor(), BootsKeemstar()];
   }
 
   static Item getItem(int id) {

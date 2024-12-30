@@ -3,14 +3,14 @@ import 'package:flutter_project/src/model/item/Boost.dart';
 import 'package:flutter_project/src/model/item/Item.dart';
 import 'package:flutter_project/src/model/item/ItemType.dart';
 
-class DukeDennisRing extends Item {
-  DukeDennisRing()
+class BootsKeemstar extends Item {
+  BootsKeemstar()
       : super(
-          Itemtype.ring,
-          'Duke Dennis Ring',
-          'A ring that gives you the power of Duke Dennis',
-          [Boost(intelligence: 3)],
+          ItemType.boots,
+          'Keemstar Boots',
+          'Do you have any idea how fast I really am?',
+          [Boost(dexterity: 10)],
           Image.asset('assets/images/missing.png', width: 60, height: 60),
-          40,
+          10,
         );
 }
