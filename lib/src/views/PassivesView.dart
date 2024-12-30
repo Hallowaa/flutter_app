@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_project/src/providers/game/GameDataProvider.dart';
 import 'package:flutter_project/src/views/FightView.dart';
 import 'package:flutter_project/src/views/HomeView.dart';
+import 'package:flutter_project/src/views/InventoryView.dart';
 import 'package:flutter_project/src/views/SettingsView.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,7 @@ class PassivesView extends StatefulWidget {
 class _PassivesViewState extends State<PassivesView> {
   bool _canAfford(int cost) {
     return Provider.of<GameDataProvider>(context, listen: false)
-            .remainingPassivePoints() >=
+            .player.remainingPassivePoints >=
         cost;
   }
 
@@ -115,7 +116,7 @@ class _PassivesViewState extends State<PassivesView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                            'Remaining passive points ${provider.remainingPassivePoints()}',
+                            'Remaining passive points ${provider.player.remainingPassivePoints}',
                             style: Theme.of(context).textTheme.bodySmall),
                       ],
                     ),
@@ -304,6 +305,8 @@ class _PassivesViewState extends State<PassivesView> {
             NavigationDestination(
                 icon: Icon(Icons.arrow_upward), label: 'Passives'),
             NavigationDestination(
+                icon: Icon(Icons.backpack), label: 'Inventory'),
+            NavigationDestination(
                 icon: Icon(Icons.electric_bolt), label: 'Fight'),
             NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
           ],
@@ -324,10 +327,17 @@ class _PassivesViewState extends State<PassivesView> {
                         builder: (context) => const PassivesView()));
                 break;
               case 2:
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const InventoryView()));
+                break;
+              case 3:
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const FightView()));
                 break;
-              case 3:
+
+              case 4:
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const HomeView()));
                 break;

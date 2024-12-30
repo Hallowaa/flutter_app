@@ -1,6 +1,6 @@
 import 'package:flutter_project/src/model/entity/Weighted.dart';
 
-class Weightedmanager {
+class WeightedManager {
     Weighted? roll(double nothingWeight, List<Weighted> weightedList) {
 
     double totalWeight = nothingWeight +

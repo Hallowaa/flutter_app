@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_project/src/providers/game/GameDataProvider.dart';
 import 'package:flutter_project/src/providers/movement/ESenseMovementProvider.dart';
 import 'package:flutter_project/src/views/FightView.dart';
+import 'package:flutter_project/src/views/InventoryView.dart';
 import 'package:flutter_project/src/views/PassivesView.dart';
 import 'package:flutter_project/src/views/SettingsView.dart';
 import 'package:provider/provider.dart';
@@ -153,11 +154,12 @@ class _HomeViewState extends State<HomeView> {
                 icon: Icon(Icons.settings), label: 'Settings'),
             NavigationDestination(
                 icon: Icon(Icons.arrow_upward), label: 'Passives'),
+            NavigationDestination(icon: Icon(Icons.backpack), label: 'Inventory'),
             NavigationDestination(icon: Icon(Icons.electric_bolt), label: 'Fight'),
             NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
           ],
           backgroundColor: Theme.of(context).primaryColorLight,
-          selectedIndex: 3,
+          selectedIndex: 4,
           onDestinationSelected: (index) {
             switch (index) {
               case 0:
@@ -173,10 +175,16 @@ class _HomeViewState extends State<HomeView> {
                         builder: (context) => const PassivesView()));
                 break;
               case 2:
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const InventoryView()));
+                break;
+              case 3:
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const FightView()));
                 break;
-              case 3:
+              case 4:
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const HomeView()));
                 break;

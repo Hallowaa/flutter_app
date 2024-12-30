@@ -7,6 +7,8 @@ import 'package:flutter_project/src/model/entity/Player.dart';
 import 'package:flutter_project/src/model/entity/WeightedManager.dart';
 import 'package:flutter_project/src/model/entity/monster/Monster.dart';
 import 'package:flutter_project/src/model/entity/monster/Monsters.dart';
+import 'package:flutter_project/src/model/item/Item.dart';
+import 'package:flutter_project/src/model/item/ItemInterpreter.dart';
 import 'package:flutter_project/src/providers/game/FightManager.dart';
 import 'package:flutter_project/src/providers/movement/ESenseMovementProvider.dart';
 import 'package:flutter_project/src/util/StorageManager.dart';
@@ -54,9 +56,6 @@ class GameDataProvider extends ChangeNotifier {
   final List<double> _speedFrequencyValues = [1.0, 0.9, 0.8, 0.7, 0.6, 0.5];
   final List<double> _expBoostValues = [1.0, 1.1, 1.2, 1.4, 1.6, 1.8, 2.0];
   FightManager? fightManager;
-
-  int healthPerLevel = 30;
-  int damagePerLevel = 4;
 
   List<double> get speedBoostValues => _speedBoostValues;
   List<double> get speedFrequencyValues => _speedFrequencyValues;
@@ -118,6 +117,7 @@ class GameDataProvider extends ChangeNotifier {
   void addExperience(double experience) {
     _player.experience +=
         experience * _expBoostValues[_player.expBoost].toInt();
+    _player.level = getLevel(_player.experience);
     savePlayer();
     notifyListeners();
   }
@@ -131,16 +131,6 @@ class GameDataProvider extends ChangeNotifier {
   int remainingExperienceForNextLevel() {
     int level = getLevel(_player.experience);
     return _levels[level]! - _player.experience.floor();
-  }
-
-  int remainingPassivePoints() {
-    return getLevel(_player.experience) -
-        _player.strength -
-        _player.dexterity -
-        _player.intelligence -
-        _player.speedBoost -
-        _player.speedFrequency -
-        _player.expBoost;
   }
 
   void upgradeSpeed() {
@@ -160,22 +150,9 @@ class GameDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int getHealth() {
-    return _player.health + healthPerLevel * getLevel(_player.experience);
-  }
-
-  int getDamage() {
-    return _player.damage + damagePerLevel * getLevel(_player.experience);
-  }
-
-  int rollDamage() {
-    return _player.damage +
-        damagePerLevel * getLevel(_player.experience) +
-        Random().nextInt(_player.extraDamage);
-  }
-
   void startFight() {
-    List<Monster> availableMonsters = Monsters.values.fold<List<Monster>>([], (prev, element) {
+    List<Monster> availableMonsters =
+        Monsters.values.fold<List<Monster>>([], (prev, element) {
       prev.add(element.monster);
       return prev;
     });
@@ -188,7 +165,7 @@ class GameDataProvider extends ChangeNotifier {
       monster.weight *= (1 + weightBoost);
     }
 
-    Monster monster = Weightedmanager().roll(0, availableMonsters) as Monster;
+    Monster monster = WeightedManager().roll(0, availableMonsters) as Monster;
 
     fightManager = FightManager(_player, monster, this);
     notifyListeners();
@@ -198,23 +175,72 @@ class GameDataProvider extends ChangeNotifier {
     if (fightManager != null) {
       if (fightManager!.monster.health <= 0) {
         int exp = fightManager!.monster.experience;
-        int dabloons = fightManager!.monster.level * Random().nextInt(5) + fightManager!.monster.level;
+        int dabloons = fightManager!.monster.level * Random().nextInt(5) +
+            fightManager!.monster.level;
+        Item? item = WeightedManager().roll(0, ItemInterpreter.items) as Item?;
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('+$exp EXP', textAlign: TextAlign.center),
+                      Text('$exp EXP',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyMedium),
                       const SizedBox(height: 10),
-                      Text('+$dabloons Dabloons',
-                          textAlign: TextAlign.center),
+                      Text('$dabloons Dabloons',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyMedium),
+                      Builder(builder: (context) {
+                        if (item != null) {
+                          return Column(
+                            children: [
+                              const SizedBox(height: 10),
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: const Color.fromARGB(255, 71, 71, 71),
+                                    borderRadius: BorderRadius.circular(10)),
+                                padding: const EdgeInsets.all(10),
+                                child: Row(
+                                  children: [
+                                    item.image,
+                                    const SizedBox(width: 10),
+                                    Flexible(
+                                      child: Text('Found ${item.name}!',
+                                          textAlign: TextAlign.center),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        } else {
+                          return Container();
+                        }
+                      })
                     ],
                   ),
                   backgroundColor: Theme.of(context).primaryColorLight,
                 ));
+        if (item != null) {
+          _player.addItem(item);
+        }
         addExperience(fightManager!.monster.experience.toDouble());
         addDabloons(dabloons);
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  content: const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                          child: Text('You lost! Try going for a walk',
+                              textAlign: TextAlign.center)),
+                    ],
+                  ),
+                  backgroundColor: Theme.of(context).primaryColorLight,
+                ));
       }
       fightManager = null;
     }

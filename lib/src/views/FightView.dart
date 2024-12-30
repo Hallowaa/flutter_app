@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_project/src/model/entity/Player.dart';
 import 'package:flutter_project/src/providers/game/GameDataProvider.dart';
 import 'package:flutter_project/src/views/HomeView.dart';
+import 'package:flutter_project/src/views/InventoryView.dart';
 import 'package:flutter_project/src/views/PassivesView.dart';
 import 'package:flutter_project/src/views/SettingsView.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +17,8 @@ class FightView extends StatefulWidget {
 }
 
 class _FightViewState extends State<FightView> {
+  bool _btnDisabled = false;
+
   double _progressValue() {
     final provider = Provider.of<GameDataProvider>(context, listen: false);
     final currentLevel = provider.getLevel(provider.player.experience);
@@ -22,6 +27,19 @@ class _FightViewState extends State<FightView> {
     final nextExperience = provider.getExperience(nextLevel);
     return (provider.player.experience - currentExperience) /
         (nextExperience - currentExperience);
+  }
+
+  void _doTurn(BuildContext context) {
+    final provider = Provider.of<GameDataProvider>(context, listen: false);
+    setState(() {
+      _btnDisabled = true;
+    });
+    provider.fightManager!.doTurn(context);
+    Timer(const Duration(seconds: 2), () {
+      setState(() {
+        _btnDisabled = false;
+      });
+    });
   }
 
   @override
@@ -38,7 +56,7 @@ class _FightViewState extends State<FightView> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(provider.player.name,
+                  Text('Fight',
                       style: Theme.of(context).textTheme.titleLarge),
                   SizedBox(
                     width: 200,
@@ -108,7 +126,7 @@ class _FightViewState extends State<FightView> {
                               children: [
                                 Row(children: [
                                   Container(
-                                    padding: const EdgeInsets.all(2),
+                                    padding: const EdgeInsets.all(6),
                                     decoration: BoxDecoration(
                                         color:
                                             Theme.of(context).primaryColorLight,
@@ -122,20 +140,20 @@ class _FightViewState extends State<FightView> {
                                   ),
                                   const SizedBox(width: 4),
                                   Container(
-                                    padding: const EdgeInsets.all(2),
+                                    padding: const EdgeInsets.all(6),
                                     decoration: BoxDecoration(
                                         color:
                                             Theme.of(context).primaryColorLight,
                                         borderRadius: BorderRadius.circular(5)),
                                     child: Text(
-                                      'Damage ${gp.getDamage()} - ${gp.getDamage() + gp.player.extraDamage}',
+                                      'Damage ${gp.player.damage} - ${gp.player.damage + gp.player.extraDamage}',
                                       style:
                                           Theme.of(context).textTheme.bodySmall,
                                     ),
                                   )
                                 ]),
                                 Container(
-                                  padding: const EdgeInsets.all(2),
+                                  padding: const EdgeInsets.all(6),
                                   decoration: BoxDecoration(
                                       color:
                                           Theme.of(context).primaryColorLight,
@@ -184,7 +202,7 @@ class _FightViewState extends State<FightView> {
                                 children: [
                                   Row(children: [
                                     Container(
-                                      padding: const EdgeInsets.all(2),
+                                      padding: const EdgeInsets.all(6),
                                       decoration: BoxDecoration(
                                           color: Theme.of(context)
                                               .primaryColorLight,
@@ -200,7 +218,7 @@ class _FightViewState extends State<FightView> {
                                     ),
                                     const SizedBox(width: 4),
                                     Container(
-                                      padding: const EdgeInsets.all(2),
+                                      padding: const EdgeInsets.all(6),
                                       decoration: BoxDecoration(
                                           color: Theme.of(context)
                                               .primaryColorLight,
@@ -215,7 +233,7 @@ class _FightViewState extends State<FightView> {
                                     )
                                   ]),
                                   Container(
-                                    padding: const EdgeInsets.all(2),
+                                    padding: const EdgeInsets.all(6),
                                     decoration: BoxDecoration(
                                         color:
                                             Theme.of(context).primaryColorLight,
@@ -263,44 +281,62 @@ class _FightViewState extends State<FightView> {
 
               if (gp.fightManager != null) {
                 ElevatedButton attackButton = ElevatedButton(
-                  onPressed: () {
-                    gp.fightManager!.doTurn(context);
-                  },
+                  onPressed: () =>
+                      _btnDisabled == true ? null : _doTurn(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColorLight,
+                    backgroundColor: _btnDisabled == true
+                        ? Theme.of(context).disabledColor
+                        : Theme.of(context).primaryColorLight,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 50, vertical: 20),
                   ),
                   child: Text(
                     'Attack',
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: _btnDisabled == true
+                        ? TextStyle(
+                            color: const Color.fromARGB(255, 99, 99, 99),
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .fontSize,
+                          )
+                        : Theme.of(context).textTheme.bodyMedium,
                   ),
                 );
 
                 buttons.add(const SizedBox(height: 20));
                 buttons.add(attackButton);
 
-                ListView combatLogs = ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: gp.fightManager!.logs.length,
-                  itemBuilder: (context, index) {
-                    bool isPlayerAttack = index % 2 == 0;
-                    return Align(
-                      alignment: isPlayerAttack
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        child: Text(
-                          gp.fightManager!.logs[index],
-                          style: TextStyle(
-                              color: isPlayerAttack ? Colors.green : Colors.red,
-                              fontSize: 14),
-                        ),
-                      ),
-                    );
-                  },
+                SizedBox combatLogs = SizedBox(
+                  height: 350,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColorLight,
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.all(10),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: gp.fightManager!.logs.length,
+                      itemBuilder: (context, index) {
+                        bool isPlayerAttack = index % 2 == 0;
+                        return Align(
+                          alignment: isPlayerAttack
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            child: Text(
+                              gp.fightManager!.logs[index],
+                              style: TextStyle(
+                                  color: isPlayerAttack ? Colors.green : Colors.red,
+                                  fontSize: 14),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 );
 
                 res.add(combatLogs);
@@ -332,11 +368,13 @@ class _FightViewState extends State<FightView> {
             NavigationDestination(
                 icon: Icon(Icons.arrow_upward), label: 'Passives'),
             NavigationDestination(
+                icon: Icon(Icons.backpack), label: 'Inventory'),
+            NavigationDestination(
                 icon: Icon(Icons.electric_bolt), label: 'Fight'),
             NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
           ],
           backgroundColor: Theme.of(context).primaryColorLight,
-          selectedIndex: 2,
+          selectedIndex: 3,
           onDestinationSelected: (index) {
             switch (index) {
               case 0:
@@ -352,10 +390,17 @@ class _FightViewState extends State<FightView> {
                         builder: (context) => const PassivesView()));
                 break;
               case 2:
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const InventoryView()));
+                break;
+              case 3:
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const FightView()));
                 break;
-              case 3:
+
+              case 4:
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const HomeView()));
                 break;

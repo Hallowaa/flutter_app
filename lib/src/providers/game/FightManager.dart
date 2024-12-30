@@ -16,7 +16,7 @@ class FightManager {
 
   Monster get monster => _monster;
 
-  FightManager(this._player, this._monster,  this._gp) {
+  FightManager(this._player, this._monster, this._gp) {
     entities = [_player, _monster];
     playerHealth = _player.health;
     monsterMaxHealth = _monster.health;
@@ -34,7 +34,13 @@ class FightManager {
       _playerAttack();
     } else {
       _monsterAttack();
+      done = playerHealth <= 0 || monster.health <= 0;
+      if (done) {
+        _gp.endFight(context);
+        return;
+      }
     }
+
     turn = (turn + 1) % 2;
 
     // if monster, do automatic turn
@@ -44,7 +50,7 @@ class FightManager {
   }
 
   void _playerAttack() {
-    int damage = _gp.rollDamage();
+    int damage = _gp.player.rollDamage();
     _monster.takeDamage(damage);
     logs.add("${_player.name} hit ${_monster.name} for $damage damage!");
   }

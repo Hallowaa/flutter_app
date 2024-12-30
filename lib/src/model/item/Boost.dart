@@ -18,4 +18,27 @@ class Boost {
     this.frequency = 0,
     this.experience = 0,
   });
+
+  double getNamed(String name) {
+    switch (name) {
+      case 'strength':
+        return strength.toDouble();
+      case 'dexterity':
+        return dexterity.toDouble();
+      case 'intelligence':
+        return intelligence.toDouble();
+      case 'health':
+        return health.toDouble();
+      case 'damage':
+        return damage.toDouble();
+      case 'speed':
+        return speed;
+      case 'frequency':
+        return frequency;
+      case 'experience':
+        return experience;
+      default:
+        return 0;
+    }
+  }
 }

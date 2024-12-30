@@ -31,6 +31,8 @@ class _MyAppState extends State<MyApp> {
         primaryColorDark: Colors.black54,
         primaryColorLight: const Color.fromARGB(255, 34, 34, 34),
         iconTheme: const IconThemeData(color: Colors.white),
+        hintColor: const Color.fromARGB(255, 154, 207, 156),
+        disabledColor: Colors.grey,
         textTheme: const TextTheme(
           titleLarge: TextStyle(color: Colors.white, fontSize: 34),
           bodyMedium: TextStyle(color: Colors.white, fontSize: 18),

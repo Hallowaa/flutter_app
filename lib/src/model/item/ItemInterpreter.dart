@@ -5,18 +5,21 @@ import 'package:flutter_project/src/model/item/ring/DukeDennisRing.dart';
 import 'package:flutter_project/src/model/item/weapon/GlizzySword.dart';
 
 class ItemInterpreter {
-  static final List<Item> items = [
-    GlizzySword(),
-    DukeDennisRing(),
-    ImpostorArmor(),
-    KeemstarBoots()
-  ];
+  static List<Item> get items {
+    return [GlizzySword(), DukeDennisRing(), ImpostorArmor(), KeemstarBoots()];
+  }
 
   static Item getItem(int id) {
     return items[id];
   }
 
   static int getId(Item item) {
-    return items.indexOf(items.firstWhere((element) => element.name == item.name && element.description == item.description));
+    List<Item> i = items;
+    for (int j = 0; j < i.length; j++) {
+      if (i[j].name == item.name) {
+        return j;
+      }
+    }
+    return 0;
   }
 }
