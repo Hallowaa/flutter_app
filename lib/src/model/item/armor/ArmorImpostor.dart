@@ -11,6 +11,6 @@ class ArmorImpostor extends Item {
           'STOP POSTING ABOUT AMONG US',
           [Boost(health: 50)],
           Image.asset('assets/images/missing.png', width: 60, height: 60),
-          75,
+          750,
         );
 }

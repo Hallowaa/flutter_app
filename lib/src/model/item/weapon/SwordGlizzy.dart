@@ -11,6 +11,6 @@ class SwordGlizzy extends Item {
           'I know what you are... a glizzy gobbler',
           [Boost(dexterity: 2, damage: 5)],
           Image.asset('assets/images/missing.png', width: 60, height: 60),
-          50,
+          500,
         );
 }

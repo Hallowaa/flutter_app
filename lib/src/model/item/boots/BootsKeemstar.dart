@@ -11,6 +11,6 @@ class BootsKeemstar extends Item {
           'Do you have any idea how fast I really am?',
           [Boost(dexterity: 10)],
           Image.asset('assets/images/missing.png', width: 60, height: 60),
-          10,
+          175,
         );
 }

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_project/src/model/entity/Player.dart';
 import 'package:flutter_project/src/providers/game/GameDataProvider.dart';
 import 'package:flutter_project/src/views/HomeView.dart';
 import 'package:flutter_project/src/views/InventoryView.dart';

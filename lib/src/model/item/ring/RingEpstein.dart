@@ -3,14 +3,14 @@ import 'package:flutter_project/src/model/item/Boost.dart';
 import 'package:flutter_project/src/model/item/Item.dart';
 import 'package:flutter_project/src/model/item/ItemType.dart';
 
-class SwordDiddy extends Item {
-  SwordDiddy()
+class RingEpstein extends Item {
+  RingEpstein()
       : super(
-          ItemType.weapon,
-          'Diddy Sword',
-          'Oil up the sword and get ready to fight',
-          [Boost(strength: 2, damage: 10)],
+          ItemType.ring,
+          'Epstein Ring',
+          'Epstein did not kill himself',
+          [Boost(intelligence: 6)],
           Image.asset('assets/images/missing.png', width: 60, height: 60),
-          375,
+          150,
         );
 }

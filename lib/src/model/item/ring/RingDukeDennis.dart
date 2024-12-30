@@ -11,6 +11,6 @@ class RingDukeDennis extends Item {
           'Duke Dennis is the best 2k player',
           [Boost(intelligence: 3)],
           Image.asset('assets/images/missing.png', width: 60, height: 60),
-          40,
+          250,
         );
 }
