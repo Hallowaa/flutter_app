@@ -15,16 +15,15 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-
   double _progressValue() {
     final provider = Provider.of<GameDataProvider>(context, listen: false);
     final currentLevel = provider.getLevel(provider.player.experience);
     final nextLevel = currentLevel + 1;
     final currentExperience = provider.getExperience(currentLevel);
     final nextExperience = provider.getExperience(nextLevel);
-    return (provider.player.experience - currentExperience) / (nextExperience - currentExperience);
+    return (provider.player.experience - currentExperience) /
+        (nextExperience - currentExperience);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +44,8 @@ class _HomeViewState extends State<HomeView> {
                     child: LinearProgressIndicator(
                       value: _progressValue(),
                       backgroundColor: Theme.of(context).primaryColorDark,
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+                      valueColor:
+                          const AlwaysStoppedAnimation<Color>(Colors.green),
                     ),
                   ),
                 ],
@@ -74,72 +74,238 @@ class _HomeViewState extends State<HomeView> {
           })),
       body: Center(
         child: Consumer<GameDataProvider>(builder: (context, provider, child) {
-          return Container(
-            padding: const EdgeInsets.all(24),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColorLight,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColorLight,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Speed',
+                              style: Theme.of(context).textTheme.bodyMedium),
+                          Text(
+                              (Provider.of<GameDataProvider>(context, listen: true)
+                                      .totalSpeed)
+                                  .toStringAsFixed(2),
+                              style: Theme.of(context).textTheme.bodyMedium),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Speed boost',
+                              style: Theme.of(context).textTheme.bodyMedium),
+                          Text(
+                              '${(((Provider.of<GameDataProvider>(context, listen: true)
+                                  .totalSpeedBoost - 1) * 100)
+                                  .toStringAsFixed(0))}%',
+                              style: Theme.of(context).textTheme.bodyMedium),
+                        ],
+                      ),
+                    ],
+                  )),
+              const SizedBox(height: 10),
+              Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColorLight,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('EXP gain',
+                              style: Theme.of(context).textTheme.bodyMedium),
+                          Text(
+                              (Provider.of<GameDataProvider>(context,
+                                          listen: true)
+                                      .expGain)
+                                  .toStringAsFixed(2),
+                              style: Theme.of(context).textTheme.bodyMedium),
+                        ],
+                      ),
+                      Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Speed',
+                            Text('EXP boost',
                                 style: Theme.of(context).textTheme.bodyMedium),
                             Text(
-                                (Provider.of<ESenseMovementProvider>(context)
-                                    .deviceSpeedMagnitude * provider
-                                        .speedBoostValues[provider.player.speedBoost])
-                                    .toStringAsFixed(2),
-                                style: Theme.of(context).textTheme.bodyMedium),
-                          ],
+                              '${((Provider.of<GameDataProvider>(context, listen: true).totalExpBoost - 1) * 100).toStringAsFixed(0)}%',
+                            )
+                          ])
+                    ],
+                  )),
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColorLight,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Max health',
+                            style: Theme.of(context).textTheme.bodyMedium),
+                        Text('${provider.player.health}',
+                            style: Theme.of(context).textTheme.bodyMedium),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Damage',
+                            style: Theme.of(context).textTheme.bodyMedium),
+                        Text('${provider.player.damage} - ${provider.player.damage + provider.player.extraDamage}',
+                            style: Theme.of(context).textTheme.bodyMedium),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Strength',
+                            style: Theme.of(context).textTheme.bodyMedium),
+                        Text('${provider.player.strength}',
+                            style: Theme.of(context).textTheme.bodyMedium),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromARGB(255, 41, 41, 41),
+                                    borderRadius: BorderRadius.circular(6)),
+                                child: Text('+1 Damage',
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall),
+                              ),
+                              const SizedBox(width: 6),
+                              Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromARGB(255, 49, 49, 49),
+                                    borderRadius: BorderRadius.circular(6)),
+                                child: Text('+10 Health',
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall),
+                              ),
+                              const SizedBox(width: 6),
+                            ],
+                          ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Strength',
-                                style: Theme.of(context).textTheme.bodyMedium),
-                            Text('${provider.player.strength}',
-                                style: Theme.of(context).textTheme.bodyMedium),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Dexterity',
-                                style: Theme.of(context).textTheme.bodyMedium),
-                            Text('${provider.player.dexterity}',
-                                style: Theme.of(context).textTheme.bodyMedium),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Intelligence',
-                                style: Theme.of(context).textTheme.bodyMedium),
-                            Text('${provider.player.intelligence}',
-                                style: Theme.of(context).textTheme.bodyMedium),
-                          ],
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 49, 49, 49),
+                              borderRadius: BorderRadius.circular(6)),
+                          child: Text(
+                              '+${provider.player.strength} Damage +${provider.player.strength * 10} Health',
+                              style: Theme.of(context).textTheme.bodySmall),
                         )
                       ],
                     ),
-                  ),
+                    const SizedBox(height: 6),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Dexterity',
+                            style: Theme.of(context).textTheme.bodyMedium),
+                        Text('${provider.player.dexterity}',
+                            style: Theme.of(context).textTheme.bodyMedium),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromARGB(255, 41, 41, 41),
+                                    borderRadius: BorderRadius.circular(6)),
+                                child: Text('+1% Speed',
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall),
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 49, 49, 49),
+                              borderRadius: BorderRadius.circular(6)),
+                          child: Text('+${provider.player.dexterity}% Speed',
+                              style: Theme.of(context).textTheme.bodySmall),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Intelligence',
+                            style: Theme.of(context).textTheme.bodyMedium),
+                        Text('${provider.player.intelligence}',
+                            style: Theme.of(context).textTheme.bodyMedium),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromARGB(255, 41, 41, 41),
+                                    borderRadius: BorderRadius.circular(6)),
+                                child: Text('+1% EXP',
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall),
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 49, 49, 49),
+                              borderRadius: BorderRadius.circular(6)),
+                          child: Text('+${provider.player.intelligence}% EXP',
+                              style: Theme.of(context).textTheme.bodySmall),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 20),
-                const Image(
-                  image: AssetImage('assets/images/player.png'),
-                  height: 300,
-                )
-              ],
-            ),
+              ),
+            ],
           );
         }),
       ),
@@ -154,8 +320,10 @@ class _HomeViewState extends State<HomeView> {
                 icon: Icon(Icons.settings), label: 'Settings'),
             NavigationDestination(
                 icon: Icon(Icons.arrow_upward), label: 'Passives'),
-            NavigationDestination(icon: Icon(Icons.backpack), label: 'Inventory'),
-            NavigationDestination(icon: Icon(Icons.electric_bolt), label: 'Fight'),
+            NavigationDestination(
+                icon: Icon(Icons.backpack), label: 'Inventory'),
+            NavigationDestination(
+                icon: Icon(Icons.electric_bolt), label: 'Fight'),
             NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
           ],
           backgroundColor: Theme.of(context).primaryColorLight,

@@ -62,6 +62,20 @@ class GameDataProvider extends ChangeNotifier {
   List<double> get expBoostValues => _expBoostValues;
   Player get player => _player;
 
+  double get expGain =>
+      totalSpeed * totalExpBoost;
+
+  double get totalExpBoost =>
+      _expBoostValues[_player.expBoost] + _player.intelligence * 0.01;
+  
+  double get totalSpeed =>
+      _eSenseMovementProvider.deviceSpeedMagnitude * totalSpeedBoost;
+
+  double get totalSpeedBoost =>
+      _speedBoostValues[_player.speedBoost] +
+      (_player.dexterity * 0.01 +
+      _player.getNamedBoostFromEquipped('speed'));
+
   GameDataProvider(ESenseMovementProvider eSenseMovementProvider) {
     loadPlayer('default');
     _eSenseMovementProvider = eSenseMovementProvider;
@@ -72,8 +86,7 @@ class GameDataProvider extends ChangeNotifier {
     _timer?.cancel();
     int sec = (1000 * _speedFrequencyValues[_player.speedFrequency]).toInt();
     _timer = Timer.periodic(Duration(milliseconds: sec), (timer) {
-      addExperience(_eSenseMovementProvider.deviceSpeedMagnitude *
-          _speedBoostValues[_player.speedBoost]);
+      addExperience(totalSpeed);
     });
   }
 
@@ -86,9 +99,11 @@ class GameDataProvider extends ChangeNotifier {
     try {
       final player = await _storageManager.readFileAsJson(name);
       _player = Player.fromJson(player);
+      _player.level = getLevel(_player.experience);
     } catch (e) {
       _player = Player();
       _player.name = name;
+      _player.level = getLevel(_player.experience);
       _storageManager.saveFile(_player.name, _player.toJson());
     }
 
@@ -115,8 +130,7 @@ class GameDataProvider extends ChangeNotifier {
   }
 
   void addExperience(double experience) {
-    _player.experience +=
-        experience * _expBoostValues[_player.expBoost].toInt();
+    _player.experience += experience * totalExpBoost;
     _player.level = getLevel(_player.experience);
     savePlayer();
     notifyListeners();
@@ -198,7 +212,8 @@ class GameDataProvider extends ChangeNotifier {
                               const SizedBox(height: 10),
                               Container(
                                 decoration: BoxDecoration(
-                                    color: const Color.fromARGB(255, 71, 71, 71),
+                                    color:
+                                        const Color.fromARGB(255, 71, 71, 71),
                                     borderRadius: BorderRadius.circular(10)),
                                 padding: const EdgeInsets.all(10),
                                 child: Row(
@@ -244,6 +259,7 @@ class GameDataProvider extends ChangeNotifier {
       }
       fightManager = null;
     }
+    savePlayer();
     notifyListeners();
   }
 }

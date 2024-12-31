@@ -83,12 +83,12 @@ class Player {
   }
 
   int get damage {
-    int beforeItems = baseDamage + damagePerLevel * level;
+    int beforeItems = baseDamage + (damagePerLevel * level) + (strength * 1);
     return beforeItems + getNamedBoostFromEquipped('damage').toInt();
   }
 
   int get health {
-    int beforeItems = baseHealth + healthPerLevel * level;
+    int beforeItems = baseHealth + (healthPerLevel * level) + (strength * 10);
     return beforeItems + getNamedBoostFromEquipped('health').toInt();
   }
 
