@@ -4,7 +4,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_project/src/providers/game/GameDataProvider.dart';
 import 'package:flutter_project/src/providers/movement/ESenseMovementProvider.dart';
 import 'package:flutter_project/src/views/HomeView.dart';
-import 'package:flutter_project/src/views/LoginView.dart';
 import 'package:provider/provider.dart';
 
 /// The Widget that configures your application.
