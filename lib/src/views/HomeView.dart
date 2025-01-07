@@ -19,6 +19,11 @@ class _HomeViewState extends State<HomeView> {
     final provider = Provider.of<GameDataProvider>(context, listen: false);
     final currentLevel = provider.getLevel(provider.player.experience);
     final nextLevel = currentLevel + 1;
+
+    if (nextLevel > 30) {
+      return 1;
+    }
+
     final currentExperience = provider.getExperience(currentLevel);
     final nextExperience = provider.getExperience(nextLevel);
     return (provider.player.experience - currentExperience) /

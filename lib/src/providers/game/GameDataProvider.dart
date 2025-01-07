@@ -69,7 +69,7 @@ class GameDataProvider extends ChangeNotifier {
       _expBoostValues[_player.expBoost] + _player.intelligence * 0.01;
   
   double get totalSpeed =>
-      _eSenseMovementProvider.deviceSpeedMagnitude * totalSpeedBoost;
+      _eSenseMovementProvider.speedMagnitude * totalSpeedBoost;
 
   double get totalSpeedBoost =>
       _speedBoostValues[_player.speedBoost] +
@@ -115,6 +115,11 @@ class GameDataProvider extends ChangeNotifier {
 
   int getLevel(double experience) {
     int level = 0;
+
+    if (experience >= _levels.values.last) {
+      return _levels.length - 1;
+    }
+
     for (int i = 0; i < _levels.length - 1; i++) {
       if (experience < _levels[i + 1]!) {
         level = i;
@@ -125,7 +130,7 @@ class GameDataProvider extends ChangeNotifier {
   }
 
   int getExperience(int level) {
-    return _levels[level]!;
+    return _levels.values.elementAt(level);
   }
 
   void addExperience(double experience) {

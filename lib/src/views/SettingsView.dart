@@ -48,6 +48,25 @@ class _SettingsViewState extends State<SettingsView> {
                 ),
               ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Use eSense sensors',
+                    style: Theme.of(context).textTheme.bodyMedium),
+                Switch(
+                  value: Provider.of<ESenseMovementProvider>(context,
+                          listen: false)
+                      .useEsenseSensors,
+                  onChanged: (value) {
+                    setState(() {
+                      Provider.of<ESenseMovementProvider>(context,
+                              listen: false)
+                          .useEsenseSensors = value;
+                    });
+                  },
+                ),
+              ],
+            )
           ],
         ),
       ),

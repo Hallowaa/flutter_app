@@ -13,35 +13,54 @@ class ESenseMovementProvider extends MovementProvider {
   static const String _eSenseDeviceName = 'eSense-0390';
 
   List<double> _eSenseAcc = [0, 0, 0];
+  final List<double> _eSenseGyro = [0, 0, 0];
+  final double _eSenseGyroMagnitude = 0;
   List<double> _eSenseAccOffset = [0, 0, 0];
+  List<double> _eSenseSpeed = [0, 0, 0];
+  double _eSenseSpeedMagnitude = 0;
+  final double _eSenseDamping = 0.5;
 
   List<double> _deviceAcc = [0, 0, 0];
-
   List<double> _deviceSpeed = [0, 0, 0];
   double _deviceSpeedMagnitude = 0;
-  final double _damping = 0.85;
+  final double _deviceDamping = 0.85;
 
   ESenseManager eSenseManager = ESenseManager(_eSenseDeviceName);
   Duration sensorInterval = SensorInterval.normalInterval;
-  bool _sampling = false;
   bool _connected = false;
 
-  List<double> get speed => _deviceSpeed;
-  double get deviceSpeedMagnitude => _deviceSpeedMagnitude;
-
   bool _useDeviceSensors = true;
+  bool _useEsenseSensors = false;
 
   bool get useDeviceSensors => _useDeviceSensors;
+  bool get useEsenseSensors => _useEsenseSensors;
   StreamSubscription? _deviceSubscription;
+  int _ticks = 50;
+
+  double get speedMagnitude => _useDeviceSensors ? _deviceSpeedMagnitude : _eSenseSpeedMagnitude;
 
   set useDeviceSensors(bool value) {
     _useDeviceSensors = value;
-    
-    if (value) {
+
+    if (value == true) {
       alternativeConnect();
+      _useEsenseSensors = false;
     } else {
       _deviceSubscription?.cancel();
     }
+    notifyListeners();
+  }
+
+  set useEsenseSensors(bool value) {
+    _useEsenseSensors = value;
+
+    if (value == true) {
+      connect();
+      _useDeviceSensors = false;
+    } else {
+      _disconnectFromESense();
+    }
+    notifyListeners();
   }
 
   ESenseMovementProvider() {
@@ -49,37 +68,53 @@ class ESenseMovementProvider extends MovementProvider {
   }
 
   @override
-  void connect() async{
+  void connect() async {
     if (_connected) {
       return;
     }
 
+    await _askForPermissions();
+
     _listenToESense();
 
     await _connectToESense();
+  }
 
-    _startListenToGyroSensorEvents();
+  Future<void> _listenToESense() async {
+    eSenseManager.connectionEvents.listen((event) {
+        _connected = false;
+        switch (event.type) {
+          case ConnectionType.connected:
+            _connected = true;
+            _startListenToGyroSensorEvents();
+            break;
+          case ConnectionType.disconnected:
+            _disconnectFromESense();
+            useDeviceSensors = true;
+            break;
+          default:
+            break;
+        }
+    });
   }
 
   @override
   void alternativeConnect() async {
     _deviceSubscription?.cancel();
-    _deviceSubscription = userAccelerometerEventStream(samplingPeriod: sensorInterval)
-        .listen((UserAccelerometerEvent event) {
+    _deviceSubscription =
+        userAccelerometerEventStream(samplingPeriod: sensorInterval)
+            .listen((UserAccelerometerEvent event) {
       _deviceAcc = [event.x, event.y, event.z];
       _deviceSpeed = [
-        (_deviceSpeed[0] + _deviceAcc[0]) * _damping,
-        (_deviceSpeed[1] + _deviceAcc[1]) * _damping,
-        (_deviceSpeed[2] + _deviceAcc[2]) * _damping
+        (_deviceSpeed[0] + _deviceAcc[0]) * _deviceDamping,
+        (_deviceSpeed[1] + _deviceAcc[1]) * _deviceDamping,
+        (_deviceSpeed[2] + _deviceAcc[2]) * _deviceDamping
       ];
-      _deviceSpeedMagnitude = sqrt(pow(_deviceSpeed[0], 2) + pow(_deviceSpeed[1], 2) + pow(_deviceSpeed[2], 2));
+      _deviceSpeedMagnitude = sqrt(pow(_deviceSpeed[0], 2) +
+          pow(_deviceSpeed[1], 2) +
+          pow(_deviceSpeed[2], 2));
       notifyListeners();
     });
-  }
-
-  @override
-  List<double> getAcceleration() {
-    return _sampling ? _eSenseAcc : _deviceAcc;
   }
 
   @override
@@ -102,49 +137,36 @@ class ESenseMovementProvider extends MovementProvider {
     }
   }
 
-  void _listenToESenseEvents() async {
-    eSenseManager.eSenseEvents.listen((event) {
-      print('ESENSE event: $event');
-    });
-
-    _getESenseProperties();
-  }
-
-  void _getESenseProperties() async {
-    await eSenseManager.getAccelerometerOffset();
-    Timer(const Duration(seconds: 2),
-        () async => await eSenseManager.getSensorConfig());
-  }
-
-  Future<void> _listenToESense() async {
-  await _askForPermissions();
-
-  eSenseManager.connectionEvents.listen((event) {
-    if (event.type == ConnectionType.connected) {
-      _listenToESenseEvents();
-    }});
-  }
-
   Future<void> _calibrateAccelOffset() async {
     _eSenseAccOffset = _eSenseAcc;
   }
 
   StreamSubscription? subscription;
   void _startListenToGyroSensorEvents() async {
-    await eSenseManager.setSamplingRate(10);
-
-    // subscribe to sensor event from the eSense device
+    subscription?.cancel();
     subscription = eSenseManager.sensorEvents.listen((event) {
+      _ticks++;
       if (event.accel != null) {
         _eSenseAcc = [event.accel![0], event.accel![1], event.accel![2]]
-            .map((e) =>
-        (e / 8192) *
-            9.80665) // value divided by accel scale factor * g
-            .toList();
-      }
-    });
+            .map((e) => (e / 8192) * 9.80665).toList();
 
-    _sampling = true;
+        if (_ticks >= 50) {
+          _calibrateAccelOffset();
+          _ticks = 0;
+        }
+
+        _eSenseSpeed = [
+          (_eSenseSpeed[0] + _eSenseAcc[0] - _eSenseAccOffset[0]) * _eSenseDamping,
+          (_eSenseSpeed[1] + _eSenseAcc[1] - _eSenseAccOffset[1]) * _eSenseDamping,
+          (_eSenseSpeed[2] + _eSenseAcc[2] - _eSenseAccOffset[2]) * _eSenseDamping
+        ];
+        _eSenseSpeedMagnitude = sqrt(pow(_eSenseSpeed[0], 2) +
+            pow(_eSenseSpeed[1], 2) +
+            pow(_eSenseSpeed[2], 2));
+        notifyListeners();
+      }
+      _calibrateAccelOffset();
+    });
   }
 
   Future<void> _connectToESense() async {

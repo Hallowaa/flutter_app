@@ -22,6 +22,11 @@ class _FightViewState extends State<FightView> {
     final provider = Provider.of<GameDataProvider>(context, listen: false);
     final currentLevel = provider.getLevel(provider.player.experience);
     final nextLevel = currentLevel + 1;
+
+    if (nextLevel > 30) {
+      return 1;
+    }
+
     final currentExperience = provider.getExperience(currentLevel);
     final nextExperience = provider.getExperience(nextLevel);
     return (provider.player.experience - currentExperience) /
@@ -55,8 +60,7 @@ class _FightViewState extends State<FightView> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Fight',
-                      style: Theme.of(context).textTheme.titleLarge),
+                  Text('Fight', style: Theme.of(context).textTheme.titleLarge),
                   SizedBox(
                     width: 200,
                     child: LinearProgressIndicator(
@@ -328,7 +332,9 @@ class _FightViewState extends State<FightView> {
                             child: Text(
                               gp.fightManager!.logs[index],
                               style: TextStyle(
-                                  color: isPlayerAttack ? Colors.green : Colors.red,
+                                  color: isPlayerAttack
+                                      ? Colors.green
+                                      : Colors.red,
                                   fontSize: 14),
                             ),
                           ),
