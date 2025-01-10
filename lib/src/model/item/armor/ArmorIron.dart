@@ -3,14 +3,14 @@ import 'package:flutter_project/src/model/item/Boost.dart';
 import 'package:flutter_project/src/model/item/Item.dart';
 import 'package:flutter_project/src/model/item/ItemType.dart';
 
-class ArmorImpostor extends Item {
-  ArmorImpostor()
+class ArmorIron extends Item {
+  ArmorIron()
       : super(
           ItemType.armor,
-          'Impostor Armor',
-          'STOP POSTING ABOUT AMONG US',
+          'Iron Armor',
+          'Every game has this',
           [Boost(health: 50)],
-          Image.asset('assets/images/missing.png', width: 60, height: 60),
+          Image.asset('assets/images/armoriron.png', width: 60, height: 60),
           650,
         );
 }

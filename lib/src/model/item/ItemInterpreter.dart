@@ -1,28 +1,35 @@
 import 'package:flutter_project/src/model/item/Item.dart';
-import 'package:flutter_project/src/model/item/armor/ArmorAmericaCap.dart';
-import 'package:flutter_project/src/model/item/armor/ArmorImpostor.dart';
-import 'package:flutter_project/src/model/item/boots/BootsHardsocks.dart';
-import 'package:flutter_project/src/model/item/boots/BootsKeemstar.dart';
-import 'package:flutter_project/src/model/item/ring/RingDukeDennis.dart';
-import 'package:flutter_project/src/model/item/ring/RingEpstein.dart';
+import 'package:flutter_project/src/model/item/armor/ArmorGold.dart';
+import 'package:flutter_project/src/model/item/armor/ArmorIron.dart';
+import 'package:flutter_project/src/model/item/boots/BootsLeather.dart';
+import 'package:flutter_project/src/model/item/boots/BootsGold.dart';
+import 'package:flutter_project/src/model/item/ring/RingMagic.dart';
+import 'package:flutter_project/src/model/item/ring/RingGold.dart';
 import 'package:flutter_project/src/model/item/weapon/SwordDiamond.dart';
-import 'package:flutter_project/src/model/item/weapon/SwordDiddy.dart';
-import 'package:flutter_project/src/model/item/weapon/SwordGlizzy.dart';
-import 'package:flutter_project/src/model/item/weapon/WeaponMoldyCheese.dart';
+import 'package:flutter_project/src/model/item/weapon/SwordNeutral.dart';
+import 'package:flutter_project/src/model/item/weapon/SwordWood.dart';
+import 'package:flutter_project/src/model/item/weapon/SwordVoid.dart';
 
 class ItemInterpreter {
   static List<Item> get items {
     return [
-      SwordGlizzy(),
-      RingDukeDennis(),
-      ArmorImpostor(),
-      BootsKeemstar(),
-      ArmorAmericaCap(),
-      BootsHardsocks(),
-      RingEpstein(),
+      // armor
+      ArmorGold(),
+      ArmorIron(),
+
+      // boots
+      BootsLeather(),
+      BootsGold(),
+
+      // rings
+      RingMagic(),
+      RingGold(),
+
+      // weapons
+      SwordWood(),
       SwordDiamond(),
-      SwordDiddy(),
-      WeaponMoldyCheese()
+      SwordNeutral(),
+      SwordVoid()
     ];
   }
 

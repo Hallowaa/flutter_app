@@ -1,20 +1,18 @@
 import 'dart:math';
 
-import 'package:flutter_project/src/providers/movement/MovementProvider.dart';
 import 'dart:io';
 import 'dart:async';
 
 import 'package:esense_flutter/esense.dart';
+import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
-class ESenseMovementProvider extends MovementProvider {
+class ESenseMovementProvider extends ChangeNotifier{
   static const int fractionalDigits = 2;
   static const String _eSenseDeviceName = 'eSense-0390';
 
   List<double> _eSenseAcc = [0, 0, 0];
-  final List<double> _eSenseGyro = [0, 0, 0];
-  final double _eSenseGyroMagnitude = 0;
   List<double> _eSenseAccOffset = [0, 0, 0];
   List<double> _eSenseSpeed = [0, 0, 0];
   double _eSenseSpeedMagnitude = 0;
@@ -67,7 +65,6 @@ class ESenseMovementProvider extends MovementProvider {
     alternativeConnect();
   }
 
-  @override
   void connect() async {
     if (_connected) {
       return;
@@ -98,7 +95,6 @@ class ESenseMovementProvider extends MovementProvider {
     });
   }
 
-  @override
   void alternativeConnect() async {
     _deviceSubscription?.cancel();
     _deviceSubscription =
@@ -115,11 +111,6 @@ class ESenseMovementProvider extends MovementProvider {
           pow(_deviceSpeed[2], 2));
       notifyListeners();
     });
-  }
-
-  @override
-  List<double> getAccelOffset() {
-    return _eSenseAccOffset;
   }
 
   Future<void> _askForPermissions() async {

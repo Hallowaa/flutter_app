@@ -3,14 +3,14 @@ import 'package:flutter_project/src/model/item/Boost.dart';
 import 'package:flutter_project/src/model/item/Item.dart';
 import 'package:flutter_project/src/model/item/ItemType.dart';
 
-class ArmorAmericaCap extends Item {
-  ArmorAmericaCap()
+class ArmorGold extends Item {
+  ArmorGold()
       : super(
           ItemType.armor,
-          'America Cap',
-          'Make america great again',
-          [Boost(health: 100, intelligence: -3)],
-          Image.asset('assets/images/missing.png', width: 60, height: 60),
-          100,
+          'Gold Armor',
+          'Greed propels you',
+          [Boost(health: 60, dexterity: -1, intelligence: 3)],
+          Image.asset('assets/images/armorgold.png', width: 60, height: 60),
+          200,
         );
 }

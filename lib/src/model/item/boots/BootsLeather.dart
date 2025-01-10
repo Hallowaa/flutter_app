@@ -3,14 +3,14 @@ import 'package:flutter_project/src/model/item/Boost.dart';
 import 'package:flutter_project/src/model/item/Item.dart';
 import 'package:flutter_project/src/model/item/ItemType.dart';
 
-class BootsHardsocks extends Item {
-  BootsHardsocks()
+class BootsLeather extends Item {
+  BootsLeather()
       : super(
           ItemType.boots,
-          'Hardsocks',
-          'These socks are hard, and they smell weird...',
+          'Leather Boots',
+          'Walking! Now without the pain',
           [Boost(speed: 0.15, strength: 3)],
-          Image.asset('assets/images/missing.png', width: 60, height: 60),
-          125,
+          Image.asset('assets/images/bootsleather.png', width: 60, height: 60),
+          200,
         );
 }

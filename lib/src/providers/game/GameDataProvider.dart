@@ -195,7 +195,7 @@ class GameDataProvider extends ChangeNotifier {
         int exp = fightManager!.monster.experience;
         int dabloons = fightManager!.monster.level * Random().nextInt(5) +
             fightManager!.monster.level;
-        Item? item = WeightedManager().roll(20000, ItemInterpreter.items) as Item?;
+        Item? item = WeightedManager().roll(0, ItemInterpreter.items) as Item?;
         showDialog(
             context: context,
             builder: (context) => AlertDialog(

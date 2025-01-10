@@ -10,7 +10,7 @@ class SwordDiamond extends Item {
           'Diamond Sword',
           'Steve would be proud',
           [Boost(strength: 5, dexterity: 4, intelligence: 3, damage: 35)],
-          Image.asset('assets/images/missing.png', width: 60, height: 60),
+          Image.asset('assets/images/sworddiamond.png', width: 60, height: 60),
           135,
         );
 }

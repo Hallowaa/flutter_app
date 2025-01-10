@@ -3,14 +3,14 @@ import 'package:flutter_project/src/model/item/Boost.dart';
 import 'package:flutter_project/src/model/item/Item.dart';
 import 'package:flutter_project/src/model/item/ItemType.dart';
 
-class RingEpstein extends Item {
-  RingEpstein()
+class RingMagic extends Item {
+  RingMagic()
       : super(
           ItemType.ring,
-          'Epstein Ring',
-          'Epstein did not kill himself',
-          [Boost(intelligence: 6)],
-          Image.asset('assets/images/missing.png', width: 60, height: 60),
-          150,
+          'Magic Ring',
+          'No more mage seekers!',
+          [Boost(intelligence: 3)],
+          Image.asset('assets/images/ringmagic.png', width: 60, height: 60),
+          250,
         );
 }

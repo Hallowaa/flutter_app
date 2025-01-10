@@ -3,14 +3,14 @@ import 'package:flutter_project/src/model/item/Boost.dart';
 import 'package:flutter_project/src/model/item/Item.dart';
 import 'package:flutter_project/src/model/item/ItemType.dart';
 
-class SwordGlizzy extends Item {
-  SwordGlizzy()
+class SwordWood extends Item {
+  SwordWood()
       : super(
           ItemType.weapon,
-          'Glizzy Sword',
-          'I know what you are... a glizzy gobbler',
+          'Wood Sword',
+          'This might cause splinters',
           [Boost(dexterity: 2, damage: 5)],
-          Image.asset('assets/images/missing.png', width: 60, height: 60),
+          Image.asset('assets/images/swordwood.png', width: 60, height: 60),
           500,
         );
 }

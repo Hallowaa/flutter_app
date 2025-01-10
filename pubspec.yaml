@@ -34,12 +34,4 @@ flutter:
 
   assets:
     # Add assets from the images directory to the application.
-    - assets/images/player.png
-    - assets/images/tabi.png
-    - assets/images/stopwatch.png
-    - assets/images/perandus.png
-    - assets/images/slime.png
-    - assets/images/goblin.png
-    - assets/images/playerFace.png
-    - assets/images/wolf.png
-    - assets/images/missing.png
+    - assets/images/

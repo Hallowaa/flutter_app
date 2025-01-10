@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/src/providers/game/GameDataProvider.dart';
-import 'package:flutter_project/src/providers/movement/ESenseMovementProvider.dart';
 import 'package:flutter_project/src/views/FightView.dart';
 import 'package:flutter_project/src/views/InventoryView.dart';
 import 'package:flutter_project/src/views/PassivesView.dart';
