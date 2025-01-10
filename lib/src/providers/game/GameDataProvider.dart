@@ -179,7 +179,7 @@ class GameDataProvider extends ChangeNotifier {
 
     for (var monster in availableMonsters) {
       int levelDifference = (playerLevel - monster.level).abs();
-      double weightBoost = max(-0.5, 1 - (levelDifference / 2));
+      double weightBoost = exp(-pow(levelDifference, 2) / 2);
       monster.weight *= (1 + weightBoost);
     }
 
@@ -195,7 +195,7 @@ class GameDataProvider extends ChangeNotifier {
         int exp = fightManager!.monster.experience;
         int dabloons = fightManager!.monster.level * Random().nextInt(5) +
             fightManager!.monster.level;
-        Item? item = WeightedManager().roll(0, ItemInterpreter.items) as Item?;
+        Item? item = WeightedManager().roll(20000, ItemInterpreter.items) as Item?;
         showDialog(
             context: context,
             builder: (context) => AlertDialog(

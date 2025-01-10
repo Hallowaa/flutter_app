@@ -11,6 +11,6 @@ class ArmorIron extends Item {
           'Every game has this',
           [Boost(health: 50)],
           Image.asset('assets/images/armoriron.png', width: 60, height: 60),
-          650,
+          450,
         );
 }

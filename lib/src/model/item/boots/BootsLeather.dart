@@ -11,6 +11,6 @@ class BootsLeather extends Item {
           'Walking! Now without the pain',
           [Boost(speed: 0.15, strength: 3)],
           Image.asset('assets/images/bootsleather.png', width: 60, height: 60),
-          200,
+          175,
         );
 }

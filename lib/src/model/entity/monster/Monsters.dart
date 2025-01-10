@@ -20,7 +20,7 @@ extension MonsterExtension on Monsters {
           25,
           1,
           Image.asset('assets/images/slime.png'),
-          400,
+          100,
         );
       case Monsters.goblin:
         return Monster(
@@ -31,7 +31,7 @@ extension MonsterExtension on Monsters {
           50,
           2,
           Image.asset('assets/images/goblin.png'),
-          200,
+          100,
         );
       case Monsters.wolf:
         return Monster(
@@ -42,7 +42,7 @@ extension MonsterExtension on Monsters {
           75,
           3,
           Image.asset('assets/images/wolf.png'),
-          130,
+          100,
         );
       case Monsters.ghost:
         return Monster(
@@ -52,7 +52,7 @@ extension MonsterExtension on Monsters {
           30,
           100,
           4,
-          Image.asset('assets/images/missing.png'),
+          Image.asset('assets/images/ghost.png'),
           100,
         );
     }
