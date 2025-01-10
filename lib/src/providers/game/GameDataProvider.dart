@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/src/model/entity/Player.dart';
 import 'package:flutter_project/src/model/entity/WeightedManager.dart';
@@ -81,6 +80,7 @@ class GameDataProvider extends ChangeNotifier {
     _eSenseMovementProvider = eSenseMovementProvider;
     updateTimer();
   }
+
 
   void updateTimer() {
     _timer?.cancel();
